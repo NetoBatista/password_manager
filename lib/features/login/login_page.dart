@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:localization/localization.dart';
+import 'package:password_manager/extension/navigation_extension.dart';
 import 'package:password_manager/validator/form_validator.dart';
 
 class LoginPage extends StatefulWidget {
@@ -79,7 +80,9 @@ class _LoginPageState extends State<LoginPage> {
               Padding(
                 padding: const EdgeInsets.fromLTRB(36, 16, 36, 36),
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    context.pushNamed('/home');
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.black,
                     foregroundColor: Colors.white,
