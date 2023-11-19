@@ -14,5 +14,12 @@
     "confirm": "Confirm",
     "name": "Name",
     "generate_password": "Generate password",
-    "error_default": "An error occurred"
+    "error_default": "An error occurred",
+    "change_password": "Change password",
+    "old_password": "Old password",
+    "new_password": "New password",
+    "cancel": "Cancel",
+    "privacy": "Privacy",
+    "change_account": "Change account",
+    "know_more": "Know more"
 }

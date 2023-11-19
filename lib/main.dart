@@ -3,6 +3,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:localization/localization.dart';
 import 'package:password_manager/features/home/home_page.dart';
 import 'package:password_manager/features/login/login_page.dart';
+import 'package:password_manager/features/settings/settings_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -56,6 +57,7 @@ class MyApp extends StatelessWidget {
       routes: <String, WidgetBuilder>{
         '/': (BuildContext context) => const LoginPage(),
         '/home': (BuildContext context) => const HomePage(),
+        '/settings': (BuildContext context) => const SettingsPage(),
       },
     );
   }

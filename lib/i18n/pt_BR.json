@@ -14,5 +14,12 @@
     "confirm": "Confirmar",
     "name": "Nome",
     "generate_password": "Gerar senha",
-    "error_default": "Ocorreu um erro"
+    "error_default": "Ocorreu um erro",
+    "change_password": "Alterar senha",
+    "old_password": "Senha antiga",
+    "new_password": "Nova senha",
+    "cancel": "Cancelar",
+    "privacy": "Privacidade",
+    "change_account": "Trocar conta",
+    "know_more": "Saiba mais"
 }

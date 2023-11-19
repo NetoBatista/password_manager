@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:localization/localization.dart';
 import 'package:password_manager/core/model/password_model.dart';
+import 'package:password_manager/extension/navigation_extension.dart';
 import 'package:password_manager/features/password/password_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -18,6 +19,7 @@ class _HomePageState extends State<HomePage> {
         onPressed: () {
           showDialog(
             context: context,
+            barrierDismissible: false,
             builder: (BuildContext context) {
               return AlertDialog(
                 content: PasswordPage(
@@ -42,7 +44,12 @@ class _HomePageState extends State<HomePage> {
               children: [
                 Flexible(
                   child: Container(
-                    decoration: BoxDecoration(color: Colors.grey[200]),
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(50),
+                      ),
+                    ),
                     child: TextField(
                       decoration: InputDecoration(
                         prefixIcon: const Icon(Icons.search_outlined),
@@ -53,7 +60,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () => context.pushNamed('/settings'),
                   icon: const Icon(
                     Icons.settings_outlined,
                   ),
@@ -74,6 +81,7 @@ class _HomePageState extends State<HomePage> {
                         onTap: () {
                           showDialog(
                             context: context,
+                            barrierDismissible: false,
                             builder: (BuildContext context) {
                               return AlertDialog(
                                 content: PasswordPage(
