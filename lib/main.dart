@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:localization/localization.dart';
 import 'package:password_manager/features/home/home_page.dart';
+import 'package:password_manager/features/know_more/know_more_page.dart';
 import 'package:password_manager/features/login/login_page.dart';
 import 'package:password_manager/features/settings/settings_page.dart';
 
@@ -58,6 +59,7 @@ class MyApp extends StatelessWidget {
         '/': (BuildContext context) => const LoginPage(),
         '/home': (BuildContext context) => const HomePage(),
         '/settings': (BuildContext context) => const SettingsPage(),
+        '/know_more': (BuildContext context) => const KnowMorePage(),
       },
     );
   }

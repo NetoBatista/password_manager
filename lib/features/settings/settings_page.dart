@@ -29,31 +29,28 @@ class _SettingsPageState extends State<SettingsPage> {
               Row(
                 children: [
                   IconButton(
-                    onPressed: () {
-                      context.pop();
-                    },
+                    onPressed: context.pop,
                     icon: const Icon(Icons.arrow_back),
                   ),
-                  const Flexible(
-                    child: Card(
-                      child: Padding(
-                        padding: EdgeInsets.all(16.0),
-                        child: Row(
-                          children: [
-                            Icon(Icons.person),
-                            SizedBox(width: 16),
-                            Flexible(
-                              child: Text(
-                                "email@email.com",
-                                maxLines: 1,
-                              ),
-                            ),
-                          ],
+                  Text('settings'.i18n())
+                ],
+              ),
+              const Card(
+                child: Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: Row(
+                    children: [
+                      Icon(Icons.person),
+                      SizedBox(width: 16),
+                      Flexible(
+                        child: Text(
+                          "email@email.com",
+                          maxLines: 1,
                         ),
                       ),
-                    ),
+                    ],
                   ),
-                ],
+                ),
               ),
               const SizedBox(height: 16),
               ValueListenableBuilder(
@@ -151,7 +148,7 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
               const SizedBox(height: 16),
               TextButton(
-                onPressed: () {},
+                onPressed: () => context.pushNamed('/know_more'),
                 child: Row(
                   children: [
                     const Icon(Icons.link_outlined),
