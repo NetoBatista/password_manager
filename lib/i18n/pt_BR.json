@@ -10,5 +10,9 @@
     "not_a_member": "Não é um membro?",
     "register_now": "Registre-se agora",
     "search": "Pesquisar",
-    "registered_passwords": "Senhas cadastradas"
+    "registered_passwords": "Senhas cadastradas",
+    "confirm": "Confirmar",
+    "name": "Nome",
+    "generate_password": "Gerar senha",
+    "error_default": "Ocorreu um erro"
 }

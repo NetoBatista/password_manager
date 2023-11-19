@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:localization/localization.dart';
+import 'package:password_manager/core/model/password_model.dart';
+import 'package:password_manager/features/password/password_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -13,7 +15,21 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                content: PasswordPage(
+                  PasswordModel(
+                    name: '',
+                    password: '',
+                  ),
+                ),
+              );
+            },
+          );
+        },
         child: const Icon(Icons.add),
       ),
       body: Padding(
@@ -55,7 +71,21 @@ class _HomePageState extends State<HomePage> {
                     padding: EdgeInsets.only(bottom: !lastItem ? 0 : 100),
                     child: Card(
                       child: ListTile(
-                        onTap: () {},
+                        onTap: () {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                content: PasswordPage(
+                                  PasswordModel(
+                                    name: '${'password'.i18n()} ${index + 1}',
+                                    password: index.toString(),
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        },
                         title: Text('${'password'.i18n()} ${index + 1}'),
                         trailing: IconButton(
                           onPressed: () {},

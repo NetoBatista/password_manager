@@ -10,5 +10,9 @@
     "not_a_member": "Not a member",
     "register_now": "Register now",
     "search": "Search",
-    "registered_passwords": "Registered Passwords"
+    "registered_passwords": "Registered Passwords",
+    "confirm": "Confirm",
+    "name": "Name",
+    "generate_password": "Generate password",
+    "error_default": "An error occurred"
 }
