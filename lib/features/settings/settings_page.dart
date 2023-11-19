@@ -159,7 +159,7 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
               const SizedBox(height: 16),
               TextButton(
-                onPressed: () {},
+                onPressed: () => context.pushNamed('/privacy'),
                 child: Row(
                   children: [
                     const Icon(Icons.privacy_tip_outlined),

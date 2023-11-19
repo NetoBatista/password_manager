@@ -36,7 +36,6 @@ class _KnowMorePageState extends State<KnowMorePage> {
               const SizedBox(height: 24),
               Text(
                 textKnowMore(),
-                textAlign: TextAlign.justify,
               ),
               InkWell(
                 onTap: () => UrlUtil.openLink(

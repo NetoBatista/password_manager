@@ -4,6 +4,7 @@ import 'package:localization/localization.dart';
 import 'package:password_manager/features/home/home_page.dart';
 import 'package:password_manager/features/know_more/know_more_page.dart';
 import 'package:password_manager/features/login/login_page.dart';
+import 'package:password_manager/features/privacy/privacy_page.dart';
 import 'package:password_manager/features/settings/settings_page.dart';
 
 void main() {
@@ -60,6 +61,7 @@ class MyApp extends StatelessWidget {
         '/home': (BuildContext context) => const HomePage(),
         '/settings': (BuildContext context) => const SettingsPage(),
         '/know_more': (BuildContext context) => const KnowMorePage(),
+        '/privacy': (BuildContext context) => const PrivacyPage(),
       },
     );
   }
