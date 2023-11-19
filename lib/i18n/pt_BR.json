@@ -7,7 +7,7 @@
     "forgot_password": "Esqueceu a senha?",
     "or_continue_with": "Ou continue com",
     "sign_in": "Entrar",
-    "not_a_member": "Não é um membro?",
+    "not_a_member": "Não possui conta?",
     "register_now": "Registre-se agora",
     "search": "Pesquisar",
     "registered_passwords": "Senhas cadastradas",
@@ -22,5 +22,6 @@
     "privacy": "Privacidade",
     "change_account": "Trocar conta",
     "know_more": "Saiba mais",
-    "settings": "Configurações"
+    "settings": "Configurações",
+    "no_account": "Sem conta"
 }

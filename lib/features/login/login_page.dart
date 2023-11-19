@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:localization/localization.dart';
 import 'package:password_manager/extension/navigation_extension.dart';
+import 'package:password_manager/features/new_account/new_account_page.dart';
 import 'package:password_manager/validator/form_validator.dart';
 
 class LoginPage extends StatefulWidget {
@@ -81,7 +82,7 @@ class _LoginPageState extends State<LoginPage> {
                 padding: const EdgeInsets.fromLTRB(36, 16, 36, 36),
                 child: ElevatedButton(
                   onPressed: () {
-                    context.pushNamed('/home');
+                    context.pushNamedAndRemoveUntil('/home');
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.black,
@@ -112,22 +113,54 @@ class _LoginPageState extends State<LoginPage> {
                   ],
                 ),
               ),
-              IconButton(
-                highlightColor: Colors.transparent,
-                onPressed: () {},
-                icon: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                    color: Colors.white,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Column(
+                    children: [
+                      IconButton(
+                        highlightColor: Colors.transparent,
+                        onPressed: () {},
+                        icon: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                            color: Colors.white,
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Image.asset(
+                              'lib/assets/google.png',
+                              height: 48,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const Text('Google'),
+                    ],
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Image.asset(
-                      'lib/assets/google.png',
-                      height: 48,
-                    ),
+                  Column(
+                    children: [
+                      IconButton(
+                        highlightColor: Colors.transparent,
+                        onPressed: () {},
+                        icon: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                            color: Colors.white,
+                          ),
+                          child: const Padding(
+                            padding: EdgeInsets.all(16.0),
+                            child: Icon(
+                              Icons.account_box_outlined,
+                              size: 48,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Text('no_account'.i18n())
+                    ],
                   ),
-                ),
+                ],
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 8, bottom: 32),
@@ -136,10 +169,20 @@ class _LoginPageState extends State<LoginPage> {
                   children: [
                     Flexible(child: Text('not_a_member'.i18n())),
                     Flexible(
-                        child: TextButton(
-                      onPressed: () {},
-                      child: Text('register_now'.i18n()),
-                    )),
+                      child: TextButton(
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return const AlertDialog(
+                                content: NewAccountPage(),
+                              );
+                            },
+                          );
+                        },
+                        child: Text('register_now'.i18n()),
+                      ),
+                    ),
                   ],
                 ),
               )
