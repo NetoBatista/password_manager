@@ -1,0 +1,12 @@
+{
+    "welcome_to_password_manager": "Bem vindo(a) ao gerenciador de senha",
+    "required_field": "Campo obrigatório",
+    "password_must_lest_6_characteres": "Sua senha deve conter ao menos 6 caracteres",
+    "email_address": "Email",
+    "password": "Senha",
+    "forgot_password": "Esqueceu a senha?",
+    "or_continue_with": "Ou continue com",
+    "sign_in": "Entrar",
+    "not_a_member": "Não é um membro?",
+    "register_now": "Registre-se agora"
+}

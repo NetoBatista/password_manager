@@ -1,4 +1,4 @@
-package com.example.my_password
+package br.com.jbsn.password_manager
 
 import io.flutter.embedding.android.FlutterActivity
 
