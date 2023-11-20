@@ -35,5 +35,6 @@
     "password_changed_successfully": "Password changed successfully",
     "too_many_requests": "Too many requests",
     "successfully_copied": "Successfully copied",
-    "remove": "Remove"
+    "remove": "Remove",
+    "remove_account": "Remove account"
 }

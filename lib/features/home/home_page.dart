@@ -38,26 +38,29 @@ class _HomePageState extends State<HomePage> {
           return ValueListenableBuilder(
               valueListenable: _controller.passwordFilteredListNotifier,
               builder: (context, valuePasswordListNotifier, snapshot) {
-                return Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 40, 16, 16),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      buildHeader(context),
-                      Visibility(
-                        visible: valueIsLoadingNotifier,
-                        child: const Padding(
-                          padding: EdgeInsets.only(
-                            top: 16.0,
-                            left: 16,
-                            right: 16,
+                return RefreshIndicator(
+                  onRefresh: _controller.getAllPassword,
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 40, 16, 16),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        buildHeader(context),
+                        Visibility(
+                          visible: valueIsLoadingNotifier,
+                          child: const Padding(
+                            padding: EdgeInsets.only(
+                              top: 16.0,
+                              left: 16,
+                              right: 16,
+                            ),
+                            child: LinearProgressIndicator(),
                           ),
-                          child: LinearProgressIndicator(),
                         ),
-                      ),
-                      buildPasswordItems(valuePasswordListNotifier),
-                    ],
+                        buildPasswordItems(valuePasswordListNotifier),
+                      ],
+                    ),
                   ),
                 );
               });
@@ -74,7 +77,7 @@ class _HomePageState extends State<HomePage> {
         shrinkWrap: true,
         itemCount: valuePasswordListNotifier.length,
         itemBuilder: (BuildContext context, int index) {
-          var lastItem = index == 19;
+          var lastItem = index == valuePasswordListNotifier.length - 1;
           var passwordModel = valuePasswordListNotifier.elementAt(index);
           return Padding(
             padding: EdgeInsets.only(bottom: !lastItem ? 0 : 100),

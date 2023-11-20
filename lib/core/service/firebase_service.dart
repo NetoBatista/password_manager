@@ -78,4 +78,9 @@ class FirebaseService implements IFirebaseService {
   Future<void> sendPasswordResetEmail(String email) {
     return FirebaseAuth.instance.sendPasswordResetEmail(email: email);
   }
+
+  @override
+  Future<void> deleteAccount() {
+    return FirebaseAuth.instance.currentUser!.delete();
+  }
 }

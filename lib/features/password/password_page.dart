@@ -89,27 +89,34 @@ class _PasswordPageState extends State<PasswordPage> {
                         },
                   child: Text('confirm'.i18n()),
                 ),
-                const SizedBox(height: 16),
-                OutlinedButton(
-                  onPressed: valueIsLoadingNotifier
-                      ? null
-                      : () {
-                          if (_formKey.currentState!.validate()) {
-                            _controller.remove(
-                              context,
-                              widget.passwordModel,
-                            );
-                          }
-                        },
-                  child: Text(
-                    'remove'.i18n(),
-                    style: const TextStyle(color: Colors.red),
+                Visibility(
+                  visible: widget.passwordModel.id.isNotEmpty,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 16),
+                    child: OutlinedButton(
+                      onPressed: valueIsLoadingNotifier
+                          ? null
+                          : () {
+                              if (_formKey.currentState!.validate()) {
+                                _controller.remove(
+                                  context,
+                                  widget.passwordModel,
+                                );
+                              }
+                            },
+                      child: Text(
+                        'remove'.i18n(),
+                        style: const TextStyle(color: Colors.red),
+                      ),
+                    ),
                   ),
                 ),
-                const SizedBox(height: 16),
                 Visibility(
                   visible: valueIsLoadingNotifier,
-                  child: const LinearProgressIndicator(),
+                  child: const Padding(
+                    padding: EdgeInsets.only(top: 16.0),
+                    child: LinearProgressIndicator(),
+                  ),
                 ),
                 ValueListenableBuilder(
                   valueListenable: _controller.alertMessageNotifier,

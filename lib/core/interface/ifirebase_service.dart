@@ -29,4 +29,6 @@ abstract class IFirebaseService {
   Future<void> sendPasswordResetEmail(String email);
 
   User getCurrentUser();
+
+  Future<void> deleteAccount();
 }

@@ -120,6 +120,21 @@ class _SettingsPageState extends State<SettingsPage> {
                   ],
                 ),
               ),
+              const SizedBox(height: 16),
+              TextButton(
+                onPressed: () => context.pushNamed('/remove_account'),
+                child: Row(
+                  children: [
+                    const Icon(
+                      Icons.no_accounts_outlined,
+                    ),
+                    const SizedBox(width: 16),
+                    Text(
+                      'remove_account'.i18n(),
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         ),

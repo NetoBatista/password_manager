@@ -65,7 +65,7 @@ class PasswordService implements IPasswordService {
   }
 
   @override
-  Future<void> removeAll(String id) async {
+  Future<void> removeAll() async {
     var response = await _collectionReference.get();
     for (var doc in response.docs) {
       await doc.reference.delete();

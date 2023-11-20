@@ -6,6 +6,7 @@ import 'package:password_manager/features/home/home_page.dart';
 import 'package:password_manager/features/know_more/know_more_page.dart';
 import 'package:password_manager/features/login/login_page.dart';
 import 'package:password_manager/features/privacy/privacy_page.dart';
+import 'package:password_manager/features/remove_account/remove_account_page.dart';
 import 'package:password_manager/features/settings/settings_page.dart';
 
 void main() async {
@@ -65,6 +66,7 @@ class MyApp extends StatelessWidget {
         '/settings': (BuildContext context) => const SettingsPage(),
         '/know_more': (BuildContext context) => const KnowMorePage(),
         '/privacy': (BuildContext context) => const PrivacyPage(),
+        '/remove_account': (BuildContext context) => const RemoveAccountPage(),
       },
     );
   }

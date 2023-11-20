@@ -12,5 +12,5 @@ abstract class IPasswordService {
 
   Future<void> remove(String id);
 
-  Future<void> removeAll(String id);
+  Future<void> removeAll();
 }
