@@ -115,13 +115,6 @@ class _HomePageState extends State<HomePage> {
                       Clipboard.setData(
                         ClipboardData(text: passwordModel.document.password),
                       );
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            "successfully_copied".i18n(),
-                          ),
-                        ),
-                      );
                     });
                   },
                   icon: copiedPassword

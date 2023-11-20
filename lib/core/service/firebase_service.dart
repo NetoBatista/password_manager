@@ -3,12 +3,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:password_manager/core/interface/ifirebase_service.dart';
 
 class FirebaseService implements IFirebaseService {
-  final GoogleSignIn _googleSignIn = GoogleSignIn(
-    scopes: [
-      'email',
-      'https://www.googleapis.com/auth/contacts.readonly',
-    ],
-  );
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
 
   @override
   Future<GoogleSignInAccount?> signOut() {
