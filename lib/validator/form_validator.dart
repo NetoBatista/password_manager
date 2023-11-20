@@ -13,7 +13,7 @@ class FormValidator {
       return "required_field".i18n();
     }
     if (value.length < 6) {
-      return "password_must_lest_6_characteres".i18n();
+      return "weak_password".i18n();
     }
     return null;
   }

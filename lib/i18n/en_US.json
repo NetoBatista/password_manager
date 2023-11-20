@@ -1,7 +1,6 @@
 {
     "welcome_to_password_manager": "Welcome to password manager",
     "required_field": "Required field",
-    "password_must_lest_6_characteres": "Your password must contain at least 6 characters",
     "email_address": "Email address",
     "password": "Password",
     "forgot_password": "Forgot password",
@@ -23,5 +22,16 @@
     "change_account": "Change account",
     "know_more": "Know more",
     "settings": "Settings",
-    "no_account": "No account"
+    "no_account": "No account",
+    "email_already_in_use": "Email is already in use",
+    "invalid_email": "Invalid email",
+    "operation_not_allowed": "Invalid email or password",
+    "weak_password": "Must contain at least 6 digits",
+    "user_disabled": "User disabled",
+    "user_not_found": "Incorrect email or password",
+    "wrong_password": "Incorrect email or password",
+    "invalid_login_credentials": "Incorrect email or password",
+    "reset_password_success": "If your email is correct, we will send you an email with a password reset.",
+    "password_changed_successfully": "Password changed successfully",
+    "too_many_requests": "Too many requests"
 }

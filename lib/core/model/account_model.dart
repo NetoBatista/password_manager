@@ -1,9 +1,9 @@
-class NewAccountModel {
+class AccountModel {
   String emailAddress;
 
   String password;
 
-  NewAccountModel({
+  AccountModel({
     required this.emailAddress,
     required this.password,
   });

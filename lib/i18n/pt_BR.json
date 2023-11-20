@@ -1,7 +1,6 @@
 {
     "welcome_to_password_manager": "Bem vindo(a) ao gerenciador de senha",
     "required_field": "Campo obrigatório",
-    "password_must_lest_6_characteres": "Sua senha deve conter ao menos 6 caracteres",
     "email_address": "Email",
     "password": "Senha",
     "forgot_password": "Esqueceu a senha?",
@@ -23,5 +22,16 @@
     "change_account": "Trocar conta",
     "know_more": "Saiba mais",
     "settings": "Configurações",
-    "no_account": "Sem conta"
+    "no_account": "Sem conta",
+    "email_already_in_use": "Email já está em uso",
+    "invalid_email": "Email inválido",
+    "operation_not_allowed": "Email ou senha incorreta",
+    "weak_password": "Deve conter ao menos 6 digitos",
+    "user_disabled": "Usuário desativado",
+    "user_not_found": "Email ou senha incorreta",
+    "wrong_password": "Email ou senha incorreta",
+    "invalid_login_credentials": "Email ou senha incorreta",
+    "reset_password_success": "Caso seu email esteja correto, enviaremos um email com a redefinição de senha.",
+    "password_changed_successfully": "Senha alterada com sucesso",
+    "too_many_requests": "Muitas tentativas"
 }

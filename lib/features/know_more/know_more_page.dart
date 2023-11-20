@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:localization/localization.dart';
-import 'package:password_manager/core/url_util.dart';
+import 'package:password_manager/core/util/url_util.dart';
 import 'package:password_manager/extension/navigation_extension.dart';
 
 class KnowMorePage extends StatefulWidget {

@@ -22,6 +22,20 @@ class _HomePageState extends State<HomePage> {
             barrierDismissible: false,
             builder: (BuildContext context) {
               return AlertDialog(
+                titlePadding: const EdgeInsets.only(
+                  top: 8,
+                  left: 8,
+                ),
+                title: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    IconButton(
+                      onPressed: context.pop,
+                      icon: const Icon(Icons.arrow_back),
+                    ),
+                    Text('new_password'.i18n()),
+                  ],
+                ),
                 content: PasswordPage(
                   PasswordModel(
                     name: '',
@@ -84,6 +98,20 @@ class _HomePageState extends State<HomePage> {
                             barrierDismissible: false,
                             builder: (BuildContext context) {
                               return AlertDialog(
+                                titlePadding: const EdgeInsets.only(
+                                  top: 8,
+                                  left: 8,
+                                ),
+                                title: Row(
+                                  mainAxisSize: MainAxisSize.max,
+                                  children: [
+                                    IconButton(
+                                      onPressed: context.pop,
+                                      icon: const Icon(Icons.arrow_back),
+                                    ),
+                                    Text('change_password'.i18n()),
+                                  ],
+                                ),
                                 content: PasswordPage(
                                   PasswordModel(
                                     name: '${'password'.i18n()} ${index + 1}',
