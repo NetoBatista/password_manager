@@ -19,7 +19,6 @@ class SettingsController {
   User getCurrentCredential() => _firebaseService.getCurrentUser();
 
   Future<void> changeAccount(BuildContext context) async {
-    await _firebaseService.signOut();
     await _localStorageService.clear();
     if (!context.mounted) {
       return;

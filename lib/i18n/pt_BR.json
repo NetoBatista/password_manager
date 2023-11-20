@@ -33,5 +33,7 @@
     "invalid_login_credentials": "Email ou senha incorreta",
     "reset_password_success": "Caso seu email esteja correto, enviaremos um email com a redefinição de senha.",
     "password_changed_successfully": "Senha alterada com sucesso",
-    "too_many_requests": "Muitas tentativas"
+    "too_many_requests": "Muitas tentativas",
+    "successfully_copied": "Copiado com sucesso",
+    "remove": "Remover"
 }

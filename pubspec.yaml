@@ -40,6 +40,7 @@ dependencies:
   firebase_auth: ^4.14.0
   firebase_core: ^2.22.0
   firebase_messaging: ^14.7.4
+  cloud_firestore: ^4.13.1
 
 dev_dependencies:
   flutter_test:

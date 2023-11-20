@@ -5,15 +5,19 @@ class PasswordModel {
 
   String password;
 
+  DateTime createdAt;
+
   PasswordModel({
     required this.name,
     required this.password,
+    required this.createdAt,
   });
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'name': name,
       'password': password,
+      'createdAt': createdAt.millisecondsSinceEpoch,
     };
   }
 
@@ -21,6 +25,7 @@ class PasswordModel {
     return PasswordModel(
       name: map['name'] as String,
       password: map['password'] as String,
+      createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt'] as int),
     );
   }
 

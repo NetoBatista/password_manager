@@ -33,5 +33,7 @@
     "invalid_login_credentials": "Incorrect email or password",
     "reset_password_success": "If your email is correct, we will send you an email with a password reset.",
     "password_changed_successfully": "Password changed successfully",
-    "too_many_requests": "Too many requests"
+    "too_many_requests": "Too many requests",
+    "successfully_copied": "Successfully copied",
+    "remove": "Remove"
 }

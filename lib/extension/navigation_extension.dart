@@ -13,7 +13,7 @@ extension NavigationExtension on BuildContext {
     return Navigator.pushNamed(this, routeName);
   }
 
-  void pop() {
-    return Navigator.pop(this);
+  void pop({dynamic result}) {
+    return Navigator.pop(this, result);
   }
 }
