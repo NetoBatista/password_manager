@@ -55,7 +55,8 @@ This means that all data is saved in the collection corresponding to your user a
 
 This way, your data will be safe even if your ID is exposed as it is necessary to log in to obtain this data.
 
-
+To try the app you can download it:
+* [Google Play](https://play.google.com/store/apps/details?id=br.com.jbsn.password_manager)
 
 ## App images:
 
