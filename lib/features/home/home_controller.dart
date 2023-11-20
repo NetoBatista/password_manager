@@ -16,7 +16,8 @@ class HomeController {
 
   String searchFilter = '';
 
-  String passwordCopiedId = '';
+  String copiedPasswordId = '';
+  String visiblePasswordId = '';
 
   Future<void> getAllPassword() async {
     try {

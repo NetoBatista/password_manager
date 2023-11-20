@@ -79,18 +79,39 @@ class _HomePageState extends State<HomePage> {
         itemBuilder: (BuildContext context, int index) {
           var lastItem = index == valuePasswordListNotifier.length - 1;
           var passwordModel = valuePasswordListNotifier.elementAt(index);
+          var passwordVisible =
+              _controller.visiblePasswordId == passwordModel.id;
+          var copiedPassword = _controller.copiedPasswordId == passwordModel.id;
           return Padding(
             padding: EdgeInsets.only(bottom: !lastItem ? 0 : 100),
             child: Card(
               child: ListTile(
+                leading: IconButton(
+                  icon: passwordVisible
+                      ? const Icon(Icons.visibility_off)
+                      : const Icon(Icons.visibility),
+                  onPressed: () {
+                    setState(() {
+                      if (passwordVisible) {
+                        _controller.visiblePasswordId = '';
+                      } else {
+                        _controller.visiblePasswordId = passwordModel.id;
+                      }
+                    });
+                  },
+                ),
                 onTap: () {
                   onClickPassword(context, passwordModel);
                 },
-                title: Text(passwordModel.document.name),
+                title: Text(
+                  passwordVisible
+                      ? passwordModel.document.password
+                      : passwordModel.document.name,
+                ),
                 trailing: IconButton(
                   onPressed: () {
                     setState(() {
-                      _controller.passwordCopiedId = passwordModel.id;
+                      _controller.copiedPasswordId = passwordModel.id;
                       Clipboard.setData(
                         ClipboardData(text: passwordModel.document.password),
                       );
@@ -103,21 +124,9 @@ class _HomePageState extends State<HomePage> {
                       );
                     });
                   },
-                  icon: AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 500),
-                    transitionBuilder: (
-                      Widget child,
-                      Animation<double> animation,
-                    ) {
-                      return ScaleTransition(
-                        scale: animation,
-                        child: child,
-                      );
-                    },
-                    child: _controller.passwordCopiedId == passwordModel.id
-                        ? const Icon(Icons.check)
-                        : const Icon(Icons.copy_outlined),
-                  ),
+                  icon: copiedPassword
+                      ? const Icon(Icons.check)
+                      : const Icon(Icons.copy_outlined),
                 ),
               ),
             ),
