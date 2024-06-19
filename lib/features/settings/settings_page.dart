@@ -171,7 +171,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     child: Row(
                       children: [
                         Expanded(
-                          child: ElevatedButton(
+                          child: OutlinedButton(
                             onPressed: valueIsLoadingNotifier
                                 ? null
                                 : () {
@@ -179,7 +179,6 @@ class _SettingsPageState extends State<SettingsPage> {
                                         false;
                                   },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.grey[300],
                               foregroundColor: Colors.red,
                             ),
                             child: Text(
@@ -189,20 +188,10 @@ class _SettingsPageState extends State<SettingsPage> {
                         ),
                         const SizedBox(width: 16),
                         Expanded(
-                          child: ElevatedButton(
+                          child: FilledButton(
                             onPressed: valueIsLoadingNotifier
                                 ? null
-                                : () {
-                                    if (_formKey.currentState!.validate()) {
-                                      _controller.changePassword(
-                                        _changePasswordModel.oldPassword,
-                                        _changePasswordModel.newPassword,
-                                      );
-                                    }
-                                  },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.grey[300],
-                            ),
+                                : onClickConfirmChangePassword,
                             child: Text(
                               'confirm'.i18n(),
                             ),
@@ -263,6 +252,15 @@ class _SettingsPageState extends State<SettingsPage> {
         );
       },
     );
+  }
+
+  void onClickConfirmChangePassword() {
+    if (_formKey.currentState!.validate()) {
+      _controller.changePassword(
+        _changePasswordModel.oldPassword,
+        _changePasswordModel.newPassword,
+      );
+    }
   }
 
   void onTapChangePassword() {
