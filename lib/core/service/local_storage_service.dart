@@ -27,18 +27,24 @@ class LocalStorageService implements ILocalStorageService {
   @override
   Future<bool> setString(String key, String value) async {
     var instance = await getInstance();
-    return instance.setString(key, value);
+    return await instance.setString(key, value);
   }
 
   @override
   Future<bool> setBool(String key, bool value) async {
     var instance = await getInstance();
-    return instance.setBool(key, value);
+    return await instance.setBool(key, value);
   }
 
   @override
   Future<bool> clear() async {
     var instance = await getInstance();
-    return instance.clear();
+    return await instance.clear();
+  }
+
+  @override
+  Future<bool> remove(String key) async {
+    var instance = await getInstance();
+    return instance.remove(key);
   }
 }

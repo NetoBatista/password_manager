@@ -36,5 +36,11 @@
     "too_many_requests": "Too many requests",
     "successfully_copied": "Successfully copied",
     "remove": "Remove",
-    "remove_account": "Remove account"
+    "choose_theme": "Choose theme",
+    "remove_account": "Remove account",
+    "theme": "Theme",
+    "dark_mode": "Dark mode",
+    "light_mode": "Light mode",
+    "system_mode": "Automatic (system)",
+    "continue": "Continue"
 }

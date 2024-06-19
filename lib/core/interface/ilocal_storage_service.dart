@@ -8,4 +8,6 @@ abstract class ILocalStorageService {
   Future<bool?> getBool(String key);
 
   Future<bool> clear();
+
+  Future<bool> remove(String key);
 }

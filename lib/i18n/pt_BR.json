@@ -36,5 +36,11 @@
     "too_many_requests": "Muitas tentativas",
     "successfully_copied": "Copiado com sucesso",
     "remove": "Remover",
-    "remove_account": "Remover conta"
+    "remove_account": "Remover conta",
+    "choose_theme": "Escolha um tema",
+    "theme": "Tema",
+    "dark_mode": "Tema escuro",
+    "light_mode": "Tema claro",
+    "system_mode": "Automático (sistema)",
+    "continue": "Continuar"
 }

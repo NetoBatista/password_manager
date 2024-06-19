@@ -130,22 +130,8 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(36, 16, 36, 16),
-                    child: ElevatedButton(
-                      onPressed: valueIsLoadingNotifier
-                          ? null
-                          : () {
-                              if (_formKey.currentState!.validate()) {
-                                _controller.loginUserPassword(
-                                    context, _accountModel);
-                              }
-                            },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.black,
-                        foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                      ),
+                    child: FilledButton(
+                      onPressed: valueIsLoadingNotifier ? null : onClickLogin,
                       child: Padding(
                         padding: const EdgeInsets.all(16.0),
                         child: Text(
@@ -312,5 +298,11 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
+  }
+
+  Future<void> onClickLogin() async {
+    if (_formKey.currentState!.validate()) {
+      _controller.loginUserPassword(context, _accountModel);
+    }
   }
 }

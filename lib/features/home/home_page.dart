@@ -34,10 +34,10 @@ class _HomePageState extends State<HomePage> {
       ),
       body: ValueListenableBuilder(
         valueListenable: _controller.isLoadingNotifier,
-        builder: (context, valueIsLoadingNotifier, snapshot) {
+        builder: (context, snapshotIsLoadingNotifier, snapshot) {
           return ValueListenableBuilder(
               valueListenable: _controller.passwordFilteredListNotifier,
-              builder: (context, valuePasswordListNotifier, snapshot) {
+              builder: (context, snapshotPasswordListNotifier, snapshot) {
                 return RefreshIndicator(
                   onRefresh: _controller.getAllPassword,
                   child: Padding(
@@ -47,18 +47,13 @@ class _HomePageState extends State<HomePage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         buildHeader(context),
+                        const SizedBox(height: 16),
                         Visibility(
-                          visible: valueIsLoadingNotifier,
-                          child: const Padding(
-                            padding: EdgeInsets.only(
-                              top: 16.0,
-                              left: 16,
-                              right: 16,
-                            ),
-                            child: LinearProgressIndicator(),
-                          ),
+                          visible: snapshotIsLoadingNotifier,
+                          child: const LinearProgressIndicator(),
                         ),
-                        buildPasswordItems(valuePasswordListNotifier),
+                        const SizedBox(height: 8),
+                        buildPasswordItems(snapshotPasswordListNotifier),
                       ],
                     ),
                   ),
@@ -79,36 +74,12 @@ class _HomePageState extends State<HomePage> {
         itemBuilder: (BuildContext context, int index) {
           var lastItem = index == valuePasswordListNotifier.length - 1;
           var passwordModel = valuePasswordListNotifier.elementAt(index);
-          var passwordVisible =
-              _controller.visiblePasswordId == passwordModel.id;
           var copiedPassword = _controller.copiedPasswordId == passwordModel.id;
           return Padding(
             padding: EdgeInsets.only(bottom: !lastItem ? 0 : 100),
             child: Card(
               child: ListTile(
                 leading: IconButton(
-                  icon: passwordVisible
-                      ? const Icon(Icons.visibility_off)
-                      : const Icon(Icons.visibility),
-                  onPressed: () {
-                    setState(() {
-                      if (passwordVisible) {
-                        _controller.visiblePasswordId = '';
-                      } else {
-                        _controller.visiblePasswordId = passwordModel.id;
-                      }
-                    });
-                  },
-                ),
-                onTap: () {
-                  onClickPassword(context, passwordModel);
-                },
-                title: Text(
-                  passwordVisible
-                      ? passwordModel.document.password
-                      : passwordModel.document.name,
-                ),
-                trailing: IconButton(
                   onPressed: () {
                     setState(() {
                       _controller.copiedPasswordId = passwordModel.id;
@@ -120,6 +91,12 @@ class _HomePageState extends State<HomePage> {
                   icon: copiedPassword
                       ? const Icon(Icons.check)
                       : const Icon(Icons.copy_outlined),
+                ),
+                onTap: () {
+                  onClickPassword(context, passwordModel);
+                },
+                title: Text(
+                  passwordModel.document.name,
                 ),
               ),
             ),
@@ -133,24 +110,18 @@ class _HomePageState extends State<HomePage> {
     return Row(
       children: [
         Flexible(
-          child: Container(
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.all(
-                Radius.circular(50),
+          child: TextField(
+            decoration: InputDecoration(
+              prefixIcon: const Icon(Icons.search_outlined),
+              hintText: 'search'.i18n(),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(20),
               ),
             ),
-            child: TextField(
-              decoration: InputDecoration(
-                prefixIcon: const Icon(Icons.search_outlined),
-                hintText: 'search'.i18n(),
-                border: InputBorder.none,
-              ),
-              onChanged: (String value) {
-                _controller.searchFilter = value;
-                _controller.applyFilter();
-              },
-            ),
+            onChanged: (String value) {
+              _controller.searchFilter = value;
+              _controller.applyFilter();
+            },
           ),
         ),
         IconButton(

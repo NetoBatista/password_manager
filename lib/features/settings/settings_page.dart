@@ -3,17 +3,22 @@ import 'package:localization/localization.dart';
 import 'package:password_manager/core/model/change_password_model.dart';
 import 'package:password_manager/extension/navigation_extension.dart';
 import 'package:password_manager/features/settings/settings_controller.dart';
+import 'package:password_manager/features/settings/settings_item_component.dart';
 import 'package:password_manager/validator/form_validator.dart';
 
 class SettingsPage extends StatefulWidget {
-  const SettingsPage({super.key});
+  final SettingsController settingsController;
+  const SettingsPage({
+    required this.settingsController,
+    super.key,
+  });
 
   @override
   State<SettingsPage> createState() => _SettingsPageState();
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  final _controller = SettingsController();
+  SettingsController get _controller => widget.settingsController;
   final _formKey = GlobalKey<FormState>();
   final _changePasswordModel = ChangePasswordModel(
     newPassword: '',
@@ -22,7 +27,6 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
-    var user = _controller.getCurrentCredential();
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
@@ -49,7 +53,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       const SizedBox(width: 16),
                       Flexible(
                         child: Text(
-                          user.email ?? 'no_account'.i18n(),
+                          _controller.emailUserAuthenticated(),
                           maxLines: 1,
                         ),
                       ),
@@ -58,82 +62,62 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
               ),
               const SizedBox(height: 16),
+              SettingsItemComponent(
+                onTap: onClickChangeTheme,
+                title: 'theme'.i18n(),
+                leading: const Icon(Icons.dark_mode_outlined),
+                trailing: const Icon(Icons.arrow_forward_rounded),
+              ),
+              const SizedBox(height: 16),
               ValueListenableBuilder(
                 valueListenable: _controller.changePasswordNotifier,
-                builder: (context, valueChangePasswordNotifier, snapshot) {
+                builder: (context, snapshotChangePasswordNotifier, snapshot) {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Visibility(
-                        visible: !valueChangePasswordNotifier,
-                        child: TextButton(
-                          onPressed: !_controller.canChangePassword()
+                        visible: !snapshotChangePasswordNotifier,
+                        child: SettingsItemComponent(
+                          onTap: !_controller.canChangePassword()
                               ? null
-                              : () {
-                                  _controller.changePasswordNotifier.value =
-                                      true;
-                                },
-                          child: Row(
-                            children: [
-                              const Icon(Icons.password_outlined),
-                              const SizedBox(width: 16),
-                              Text('change_password'.i18n()),
-                            ],
-                          ),
+                              : onTapChangePassword,
+                          title: 'change_password'.i18n(),
+                          leading: const Icon(Icons.password_outlined),
+                          trailing: const Icon(Icons.arrow_forward_rounded),
                         ),
                       ),
-                      buildChangePassword(valueChangePasswordNotifier)
+                      buildChangePassword(snapshotChangePasswordNotifier)
                     ],
                   );
                 },
               ),
               const SizedBox(height: 16),
-              TextButton(
-                onPressed: () => context.pushNamed('/know_more'),
-                child: Row(
-                  children: [
-                    const Icon(Icons.link_outlined),
-                    const SizedBox(width: 16),
-                    Text('know_more'.i18n()),
-                  ],
-                ),
+              SettingsItemComponent(
+                onTap: () => context.pushNamed('/know_more'),
+                title: 'know_more'.i18n(),
+                leading: const Icon(Icons.link_outlined),
+                trailing: const Icon(Icons.arrow_forward_rounded),
               ),
               const SizedBox(height: 16),
-              TextButton(
-                onPressed: () => context.pushNamed('/privacy'),
-                child: Row(
-                  children: [
-                    const Icon(Icons.privacy_tip_outlined),
-                    const SizedBox(width: 16),
-                    Text('privacy'.i18n()),
-                  ],
-                ),
+              SettingsItemComponent(
+                onTap: () => context.pushNamed('/privacy'),
+                title: 'privacy'.i18n(),
+                leading: const Icon(Icons.privacy_tip_outlined),
+                trailing: const Icon(Icons.arrow_forward_rounded),
               ),
               const SizedBox(height: 16),
-              TextButton(
-                onPressed: () => _controller.changeAccount(context),
-                child: Row(
-                  children: [
-                    const Icon(Icons.change_circle_outlined),
-                    const SizedBox(width: 16),
-                    Text('change_account'.i18n()),
-                  ],
-                ),
+              SettingsItemComponent(
+                onTap: () => _controller.changeAccount(context),
+                title: 'change_account'.i18n(),
+                leading: const Icon(Icons.change_circle_outlined),
+                trailing: const Icon(Icons.arrow_forward_rounded),
               ),
               const SizedBox(height: 16),
-              TextButton(
-                onPressed: () => context.pushNamed('/remove_account'),
-                child: Row(
-                  children: [
-                    const Icon(
-                      Icons.no_accounts_outlined,
-                    ),
-                    const SizedBox(width: 16),
-                    Text(
-                      'remove_account'.i18n(),
-                    ),
-                  ],
-                ),
+              SettingsItemComponent(
+                onTap: () => context.pushNamed('/remove_account'),
+                title: 'remove_account'.i18n(),
+                leading: const Icon(Icons.no_accounts_outlined),
+                trailing: const Icon(Icons.arrow_forward_rounded),
               ),
             ],
           ),
@@ -275,6 +259,78 @@ class _SettingsPageState extends State<SettingsPage> {
                 ],
               ),
             ),
+          ),
+        );
+      },
+    );
+  }
+
+  void onTapChangePassword() {
+    _controller.changePasswordNotifier.value = true;
+  }
+
+  void onClickChangeTheme() {
+    _controller.loadCurrentTheme();
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('choose_theme'.i18n()),
+          actions: [
+            TextButton(
+              onPressed: context.pop,
+              child: Text('cancel'.i18n()),
+            ),
+            TextButton(
+              onPressed: () {
+                _controller.onChangeTheme();
+                context.pop();
+              },
+              child: Text('continue'.i18n()),
+            ),
+          ],
+          content: ValueListenableBuilder(
+            valueListenable: _controller.themeSelected,
+            builder: (context, snapshotTheme, _) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  RadioListTile(
+                    value: ThemeMode.system,
+                    title: Text('system_mode'.i18n()),
+                    groupValue: snapshotTheme,
+                    onChanged: (ThemeMode? themeMode) {
+                      if (themeMode == null) {
+                        return;
+                      }
+                      _controller.themeSelected.value = themeMode;
+                    },
+                  ),
+                  RadioListTile(
+                    value: ThemeMode.dark,
+                    title: Text('dark_mode'.i18n()),
+                    groupValue: snapshotTheme,
+                    onChanged: (ThemeMode? themeMode) {
+                      if (themeMode == null) {
+                        return;
+                      }
+                      _controller.themeSelected.value = themeMode;
+                    },
+                  ),
+                  RadioListTile(
+                    value: ThemeMode.light,
+                    title: Text('light_mode'.i18n()),
+                    groupValue: snapshotTheme,
+                    onChanged: (ThemeMode? themeMode) {
+                      if (themeMode == null) {
+                        return;
+                      }
+                      _controller.themeSelected.value = themeMode;
+                    },
+                  ),
+                ],
+              );
+            },
           ),
         );
       },
