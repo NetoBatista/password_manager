@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:localization/localization.dart';
 import 'package:password_manager/core/util/url_util.dart';
-import 'package:password_manager/extension/navigation_extension.dart';
 
 class KnowMorePage extends StatefulWidget {
   const KnowMorePage({super.key});
@@ -16,24 +15,15 @@ class _KnowMorePageState extends State<KnowMorePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('know_more'.i18n()),
+      ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(16, 40, 16, 16),
+          padding: const EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                children: [
-                  IconButton(
-                    onPressed: context.pop,
-                    icon: const Icon(
-                      Icons.arrow_back,
-                    ),
-                  ),
-                  Text('know_more'.i18n())
-                ],
-              ),
-              const SizedBox(height: 24),
               Text(
                 textKnowMore(),
               ),

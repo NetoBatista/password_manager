@@ -83,13 +83,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                                   ),
                             const SizedBox(width: 8),
                             Flexible(
-                              child: Text(
-                                valueAlertMessageNotifier,
-                                textAlign: TextAlign.justify,
-                                style: TextStyle(
-                                    color:
-                                        isSuccess ? Colors.green : Colors.red),
-                              ),
+                              child: Text(valueAlertMessageNotifier),
                             ),
                           ],
                         ),

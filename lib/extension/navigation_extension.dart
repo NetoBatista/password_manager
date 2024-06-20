@@ -9,8 +9,8 @@ extension NavigationExtension on BuildContext {
     );
   }
 
-  Future<T?> pushNamed<T>(String routeName) {
-    return Navigator.pushNamed(this, routeName);
+  Future<T?> pushNamed<T>(String routeName, {Object? arguments}) {
+    return Navigator.pushNamed(this, routeName, arguments: arguments);
   }
 
   void pop({dynamic result}) {

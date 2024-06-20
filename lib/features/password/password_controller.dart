@@ -28,8 +28,7 @@ class PasswordController {
       if (!context.mounted) {
         return;
       }
-      passwordModel.updated = true;
-      context.pop(result: passwordModel);
+      context.pop();
     } catch (error) {
       alertMessageNotifier.value = 'error_default'.i18n();
     } finally {
@@ -48,9 +47,7 @@ class PasswordController {
       if (!context.mounted) {
         return;
       }
-
-      passwordModel.removed = true;
-      context.pop(result: passwordModel);
+      context.pop();
     } catch (error) {
       alertMessageNotifier.value = 'error_default'.i18n();
     } finally {

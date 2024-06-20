@@ -28,22 +28,16 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('settings'.i18n()),
+      ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(16, 40, 16, 16),
+          padding: const EdgeInsets.all(16),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                children: [
-                  IconButton(
-                    onPressed: context.pop,
-                    icon: const Icon(Icons.arrow_back),
-                  ),
-                  Text('settings'.i18n())
-                ],
-              ),
               Card(
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),

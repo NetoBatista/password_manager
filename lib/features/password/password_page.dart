@@ -6,35 +6,60 @@ import 'package:password_manager/features/password/password_controller.dart';
 import 'package:password_manager/validator/form_validator.dart';
 
 class PasswordPage extends StatefulWidget {
-  final DocumentFirestoreModel<PasswordModel> passwordModel;
-  const PasswordPage(this.passwordModel, {super.key});
+  final DocumentFirestoreModel<PasswordModel>? passwordModel;
+  const PasswordPage({
+    this.passwordModel,
+    super.key,
+  });
 
   @override
   State<PasswordPage> createState() => _PasswordPageState();
 }
 
 class _PasswordPageState extends State<PasswordPage> {
+  DocumentFirestoreModel<PasswordModel> passwordModel = DocumentFirestoreModel(
+    document: PasswordModel(
+      name: '',
+      password: '',
+      createdAt: DateTime.now().toUtc(),
+    ),
+    id: '',
+  );
+
+  @override
+  void initState() {
+    if (widget.passwordModel != null) {
+      passwordModel = widget.passwordModel!;
+    }
+    super.initState();
+  }
+
   final _controller = PasswordController();
   final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: MediaQuery.of(context).size.width,
-      child: ValueListenableBuilder(
+    var textAppBar = passwordModel.id.isEmpty
+        ? "new_password".i18n()
+        : "change_password".i18n();
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(textAppBar),
+      ),
+      body: ValueListenableBuilder(
         valueListenable: _controller.isLoadingNotifier,
         builder: (context, valueIsLoadingNotifier, snapshot) {
           return Form(
             key: _formKey,
             child: Padding(
-              padding: const EdgeInsets.only(top: 8.0),
+              padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   TextFormField(
                     enabled: !valueIsLoadingNotifier,
-                    initialValue: widget.passwordModel.document.name,
+                    initialValue: passwordModel.document.name,
                     maxLength: 100,
                     validator: FormValidator.requiredField,
                     decoration: InputDecoration(
@@ -44,20 +69,20 @@ class _PasswordPageState extends State<PasswordPage> {
                       ),
                     ),
                     onChanged: (String value) {
-                      widget.passwordModel.document.name = value;
+                      passwordModel.document.name = value;
                     },
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 16),
                   ValueListenableBuilder(
                     valueListenable: _controller.showPasswordNotifier,
                     builder: (context, valueShowPasswordNotifier, snapshot) {
                       return TextFormField(
                         enabled: !valueIsLoadingNotifier,
-                        initialValue: widget.passwordModel.document.password,
+                        initialValue: passwordModel.document.password,
                         obscureText: !valueShowPasswordNotifier,
                         validator: FormValidator.requiredField,
                         onChanged: (String value) {
-                          widget.passwordModel.document.password = value;
+                          passwordModel.document.password = value;
                         },
                         maxLength: 100,
                         decoration: InputDecoration(
@@ -79,34 +104,18 @@ class _PasswordPageState extends State<PasswordPage> {
                     },
                   ),
                   const SizedBox(height: 16),
-                  OutlinedButton(
-                    onPressed: valueIsLoadingNotifier
-                        ? null
-                        : () {
-                            if (_formKey.currentState!.validate()) {
-                              _controller.submit(
-                                context,
-                                widget.passwordModel,
-                              );
-                            }
-                          },
+                  FilledButton(
+                    onPressed: valueIsLoadingNotifier ? null : onClickSubmit,
                     child: Text('confirm'.i18n()),
                   ),
+                  const SizedBox(height: 8),
                   Visibility(
-                    visible: widget.passwordModel.id.isNotEmpty,
+                    visible: passwordModel.id.isNotEmpty,
                     child: Padding(
                       padding: const EdgeInsets.only(top: 16),
                       child: OutlinedButton(
-                        onPressed: valueIsLoadingNotifier
-                            ? null
-                            : () {
-                                if (_formKey.currentState!.validate()) {
-                                  _controller.remove(
-                                    context,
-                                    widget.passwordModel,
-                                  );
-                                }
-                              },
+                        onPressed:
+                            valueIsLoadingNotifier ? null : onClickRemove,
                         child: Text(
                           'remove'.i18n(),
                           style: const TextStyle(color: Colors.red),
@@ -114,12 +123,10 @@ class _PasswordPageState extends State<PasswordPage> {
                       ),
                     ),
                   ),
+                  const SizedBox(height: 16),
                   Visibility(
                     visible: valueIsLoadingNotifier,
-                    child: const Padding(
-                      padding: EdgeInsets.only(top: 16.0),
-                      child: LinearProgressIndicator(),
-                    ),
+                    child: const LinearProgressIndicator(),
                   ),
                   ValueListenableBuilder(
                     valueListenable: _controller.alertMessageNotifier,
@@ -152,5 +159,17 @@ class _PasswordPageState extends State<PasswordPage> {
         },
       ),
     );
+  }
+
+  void onClickRemove() {
+    if (_formKey.currentState!.validate()) {
+      _controller.remove(context, passwordModel);
+    }
+  }
+
+  void onClickSubmit() {
+    if (_formKey.currentState!.validate()) {
+      _controller.submit(context, passwordModel);
+    }
   }
 }

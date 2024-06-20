@@ -15,7 +15,6 @@ class HomeController {
   ValueNotifier<bool> isLoadingNotifier = ValueNotifier(false);
 
   String searchFilter = '';
-  String copiedPasswordId = '';
 
   Future<void> getAllPassword() async {
     try {
