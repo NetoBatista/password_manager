@@ -3,14 +3,16 @@ import 'package:localization/localization.dart';
 import 'package:password_manager/core/interface/ipassword_service.dart';
 import 'package:password_manager/core/model/document_firestore_model.dart';
 import 'package:password_manager/core/model/password_model.dart';
-import 'package:password_manager/core/service/password_service.dart';
 import 'package:password_manager/extension/navigation_extension.dart';
 
 class PasswordController {
   var showPasswordNotifier = ValueNotifier<bool>(false);
   var isLoadingNotifier = ValueNotifier<bool>(false);
   var alertMessageNotifier = ValueNotifier<String>('');
-  final IPasswordService _passwordService = PasswordService();
+  final IPasswordService _passwordService;
+  PasswordController(
+    this._passwordService,
+  );
 
   Future<void> submit(
     BuildContext context,
@@ -28,8 +30,7 @@ class PasswordController {
       if (!context.mounted) {
         return;
       }
-      passwordModel.updated = true;
-      context.pop(result: passwordModel);
+      context.pop();
     } catch (error) {
       alertMessageNotifier.value = 'error_default'.i18n();
     } finally {
@@ -48,9 +49,7 @@ class PasswordController {
       if (!context.mounted) {
         return;
       }
-
-      passwordModel.removed = true;
-      context.pop(result: passwordModel);
+      context.pop();
     } catch (error) {
       alertMessageNotifier.value = 'error_default'.i18n();
     } finally {

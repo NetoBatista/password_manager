@@ -3,19 +3,26 @@ import 'package:localization/localization.dart';
 import 'package:password_manager/core/model/account_model.dart';
 import 'package:password_manager/extension/navigation_extension.dart';
 import 'package:password_manager/features/login/login_controller.dart';
-import 'package:password_manager/features/new_account/new_account_page.dart';
+import 'package:password_manager/features/reset_password/reset_password_controller.dart';
 import 'package:password_manager/features/reset_password/reset_password_page.dart';
 import 'package:password_manager/validator/form_validator.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+  final LoginController controller;
+  final ResetPasswordController resetController;
+
+  const LoginPage({
+    required this.controller,
+    required this.resetController,
+    super.key,
+  });
 
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final _controller = LoginController();
+  LoginController get controller => widget.controller;
   final _formKey = GlobalKey<FormState>();
   final _accountModel = AccountModel(
     emailAddress: '',
@@ -25,7 +32,9 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
-    _controller.automaticLogin(context);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      controller.automaticLogin(context);
+    });
   }
 
   @override
@@ -34,8 +43,8 @@ class _LoginPageState extends State<LoginPage> {
       body: Center(
         child: SingleChildScrollView(
           child: ValueListenableBuilder(
-            valueListenable: _controller.isLoadingNotifier,
-            builder: (context, valueIsLoadingNotifier, snapshot) {
+            valueListenable: controller.isLoadingNotifier,
+            builder: (context, snapshotIsLoading, snapshot) {
               return Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -62,7 +71,7 @@ class _LoginPageState extends State<LoginPage> {
                         children: [
                           TextFormField(
                             validator: FormValidator.requiredField,
-                            enabled: !valueIsLoadingNotifier,
+                            enabled: !snapshotIsLoading,
                             decoration: InputDecoration(
                               hintText: 'email_address'.i18n(),
                               border: OutlineInputBorder(
@@ -77,7 +86,7 @@ class _LoginPageState extends State<LoginPage> {
                           TextFormField(
                             validator: FormValidator.requiredField,
                             obscureText: true,
-                            enabled: !valueIsLoadingNotifier,
+                            enabled: !snapshotIsLoading,
                             decoration: InputDecoration(
                               hintText: 'password'.i18n(),
                               border: OutlineInputBorder(
@@ -92,60 +101,23 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(right: 32),
-                    child: InkWell(
-                      onTap: valueIsLoadingNotifier
-                          ? null
-                          : () {
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    titlePadding: const EdgeInsets.only(
-                                      top: 8,
-                                      left: 8,
-                                    ),
-                                    title: Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: [
-                                        IconButton(
-                                          onPressed: context.pop,
-                                          icon: const Icon(Icons.arrow_back),
-                                        ),
-                                        Text('forgot_password'.i18n()),
-                                      ],
-                                    ),
-                                    content: const ResetPasswordPage(),
-                                  );
-                                },
-                              );
-                            },
-                      child: Text(
-                        'forgot_password'.i18n(),
-                        textAlign: TextAlign.end,
-                        style: TextStyle(color: Colors.grey[700]),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(36, 16, 36, 16),
-                    child: ElevatedButton(
-                      onPressed: valueIsLoadingNotifier
-                          ? null
-                          : () {
-                              if (_formKey.currentState!.validate()) {
-                                _controller.loginUserPassword(
-                                    context, _accountModel);
-                              }
-                            },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.black,
-                        foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(right: 32),
+                        child: TextButton(
+                          onPressed:
+                              snapshotIsLoading ? null : onClickForgotPassword,
+                          child: Text('forgot_password'.i18n()),
                         ),
                       ),
+                    ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(36, 8, 36, 8),
+                    child: FilledButton(
+                      onPressed: snapshotIsLoading ? null : onClickLogin,
                       child: Padding(
                         padding: const EdgeInsets.all(16.0),
                         child: Text(
@@ -155,7 +127,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   ValueListenableBuilder(
-                    valueListenable: _controller.messageAlertNotifier,
+                    valueListenable: controller.messageAlertNotifier,
                     builder: (context, valueMessageAlertNotifier, snapshot) {
                       return Visibility(
                         visible: valueMessageAlertNotifier.isNotEmpty,
@@ -182,7 +154,7 @@ class _LoginPageState extends State<LoginPage> {
                     },
                   ),
                   Visibility(
-                    visible: valueIsLoadingNotifier,
+                    visible: snapshotIsLoading,
                     child: const Padding(
                       padding: EdgeInsets.only(
                         left: 32.0,
@@ -212,10 +184,10 @@ class _LoginPageState extends State<LoginPage> {
                         children: [
                           IconButton(
                             highlightColor: Colors.transparent,
-                            onPressed: valueIsLoadingNotifier
+                            onPressed: snapshotIsLoading
                                 ? null
                                 : () {
-                                    _controller.loginWithGoogle(context);
+                                    controller.loginWithGoogle(context);
                                   },
                             icon: Container(
                               decoration: BoxDecoration(
@@ -225,7 +197,7 @@ class _LoginPageState extends State<LoginPage> {
                               child: Padding(
                                 padding: const EdgeInsets.all(16.0),
                                 child: Image.asset(
-                                  valueIsLoadingNotifier
+                                  snapshotIsLoading
                                       ? 'lib/assets/google_black_white.png'
                                       : 'lib/assets/google.png',
                                   height: 48,
@@ -240,10 +212,10 @@ class _LoginPageState extends State<LoginPage> {
                         children: [
                           IconButton(
                             highlightColor: Colors.transparent,
-                            onPressed: valueIsLoadingNotifier
+                            onPressed: snapshotIsLoading
                                 ? null
                                 : () {
-                                    _controller.loginAnonymously(context);
+                                    controller.loginAnonymously(context);
                                   },
                             icon: Container(
                               decoration: BoxDecoration(
@@ -272,33 +244,8 @@ class _LoginPageState extends State<LoginPage> {
                         Flexible(child: Text('not_a_member'.i18n())),
                         Flexible(
                           child: TextButton(
-                            onPressed: valueIsLoadingNotifier
-                                ? null
-                                : () {
-                                    showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return AlertDialog(
-                                          titlePadding: const EdgeInsets.only(
-                                            top: 8,
-                                            left: 8,
-                                          ),
-                                          title: Row(
-                                            mainAxisSize: MainAxisSize.max,
-                                            children: [
-                                              IconButton(
-                                                onPressed: context.pop,
-                                                icon: const Icon(
-                                                    Icons.arrow_back),
-                                              ),
-                                              Text('register_now'.i18n()),
-                                            ],
-                                          ),
-                                          content: const NewAccountPage(),
-                                        );
-                                      },
-                                    );
-                                  },
+                            onPressed:
+                                snapshotIsLoading ? null : onClickRegisterNow,
                             child: Text('register_now'.i18n()),
                           ),
                         ),
@@ -312,5 +259,42 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
+  }
+
+  Future<void> onClickLogin() async {
+    if (_formKey.currentState!.validate()) {
+      controller.loginUserPassword(context, _accountModel);
+    }
+  }
+
+  void onClickForgotPassword() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          titlePadding: const EdgeInsets.only(
+            top: 8,
+            left: 8,
+          ),
+          title: Row(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              IconButton(
+                onPressed: context.pop,
+                icon: const Icon(Icons.arrow_back),
+              ),
+              Text('forgot_password'.i18n()),
+            ],
+          ),
+          content: ResetPasswordPage(
+            controller: widget.resetController,
+          ),
+        );
+      },
+    );
+  }
+
+  void onClickRegisterNow() {
+    context.pushNamed('/new_account');
   }
 }

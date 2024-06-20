@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:localization/localization.dart';
 import 'package:password_manager/core/interface/ifirebase_service.dart';
-import 'package:password_manager/core/service/firebase_service.dart';
 
 class ResetPasswordController {
-  final IFirebaseService _firebaseService = FirebaseService();
+  final IFirebaseService _firebaseService;
   var isLoadingNotifier = ValueNotifier<bool>(false);
   var alertMessageNotifier = ValueNotifier<String>('');
+
+  ResetPasswordController(
+    this._firebaseService,
+  );
+
   Future<void> submit(String email) async {
     try {
       isLoadingNotifier.value = true;

@@ -4,19 +4,31 @@ import 'package:localization/localization.dart';
 import 'package:password_manager/core/constant/local_storage_constant.dart';
 import 'package:password_manager/core/interface/ifirebase_service.dart';
 import 'package:password_manager/core/interface/ilocal_storage_service.dart';
-import 'package:password_manager/core/service/firebase_service.dart';
-import 'package:password_manager/core/service/local_storage_service.dart';
+import 'package:password_manager/core/interface/itheme_service.dart';
 import 'package:password_manager/extension/navigation_extension.dart';
 
 class SettingsController {
   var changePasswordNotifier = ValueNotifier<bool>(false);
   var isLoadingNotifier = ValueNotifier<bool>(false);
   var messageAlertNotifier = ValueNotifier('');
+  final IFirebaseService _firebaseService;
+  final ILocalStorageService _localStorageService;
+  final IThemeService _themeService;
 
-  final IFirebaseService _firebaseService = FirebaseService();
-  final ILocalStorageService _localStorageService = LocalStorageService();
+  SettingsController(
+    this._themeService,
+    this._firebaseService,
+    this._localStorageService,
+  );
 
   User getCurrentCredential() => _firebaseService.getCurrentUser();
+  ValueNotifier<ThemeMode> getCurrentTheme() => _themeService.getCurrent();
+  ValueNotifier<ThemeMode> themeSelected = ValueNotifier(ThemeMode.system);
+
+  void loadCurrentTheme() {
+    var currentTheme = getCurrentTheme();
+    themeSelected.value = currentTheme.value;
+  }
 
   Future<void> changeAccount(BuildContext context) async {
     await _localStorageService.clear();
@@ -59,5 +71,17 @@ class SettingsController {
     } finally {
       isLoadingNotifier.value = false;
     }
+  }
+
+  String emailUserAuthenticated() {
+    var user = getCurrentCredential();
+    if (user.email == null || user.email!.isEmpty) {
+      return 'no_account'.i18n();
+    }
+    return user.email!;
+  }
+
+  Future<void> onChangeTheme() {
+    return _themeService.change(themeSelected.value);
   }
 }

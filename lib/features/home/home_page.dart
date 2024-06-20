@@ -5,41 +5,44 @@ import 'package:password_manager/core/model/document_firestore_model.dart';
 import 'package:password_manager/core/model/password_model.dart';
 import 'package:password_manager/extension/navigation_extension.dart';
 import 'package:password_manager/features/home/home_controller.dart';
-import 'package:password_manager/features/password/password_page.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final HomeController controller;
+  const HomePage({
+    required this.controller,
+    super.key,
+  });
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  final _controller = HomeController();
+  HomeController get controller => widget.controller;
 
   @override
   void initState() {
     super.initState();
-    _controller.getAllPassword();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      controller.getAllPassword();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          onClickNewPassword(context);
-        },
+        onPressed: onClickPassword,
         child: const Icon(Icons.add),
       ),
       body: ValueListenableBuilder(
-        valueListenable: _controller.isLoadingNotifier,
-        builder: (context, valueIsLoadingNotifier, snapshot) {
+        valueListenable: controller.isLoadingNotifier,
+        builder: (context, snapshotIsLoadingNotifier, snapshot) {
           return ValueListenableBuilder(
-              valueListenable: _controller.passwordFilteredListNotifier,
-              builder: (context, valuePasswordListNotifier, snapshot) {
+              valueListenable: controller.passwordFilteredListNotifier,
+              builder: (context, snapshotPasswordListNotifier, snapshot) {
                 return RefreshIndicator(
-                  onRefresh: _controller.getAllPassword,
+                  onRefresh: controller.getAllPassword,
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(16, 40, 16, 16),
                     child: Column(
@@ -47,18 +50,13 @@ class _HomePageState extends State<HomePage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         buildHeader(context),
+                        const SizedBox(height: 16),
                         Visibility(
-                          visible: valueIsLoadingNotifier,
-                          child: const Padding(
-                            padding: EdgeInsets.only(
-                              top: 16.0,
-                              left: 16,
-                              right: 16,
-                            ),
-                            child: LinearProgressIndicator(),
-                          ),
+                          visible: snapshotIsLoadingNotifier,
+                          child: const LinearProgressIndicator(),
                         ),
-                        buildPasswordItems(valuePasswordListNotifier),
+                        const SizedBox(height: 8),
+                        buildPasswordItems(snapshotPasswordListNotifier),
                       ],
                     ),
                   ),
@@ -79,47 +77,19 @@ class _HomePageState extends State<HomePage> {
         itemBuilder: (BuildContext context, int index) {
           var lastItem = index == valuePasswordListNotifier.length - 1;
           var passwordModel = valuePasswordListNotifier.elementAt(index);
-          var passwordVisible =
-              _controller.visiblePasswordId == passwordModel.id;
-          var copiedPassword = _controller.copiedPasswordId == passwordModel.id;
           return Padding(
             padding: EdgeInsets.only(bottom: !lastItem ? 0 : 100),
             child: Card(
               child: ListTile(
                 leading: IconButton(
-                  icon: passwordVisible
-                      ? const Icon(Icons.visibility_off)
-                      : const Icon(Icons.visibility),
-                  onPressed: () {
-                    setState(() {
-                      if (passwordVisible) {
-                        _controller.visiblePasswordId = '';
-                      } else {
-                        _controller.visiblePasswordId = passwordModel.id;
-                      }
-                    });
-                  },
+                  onPressed: () => onClickCopyPassword(passwordModel),
+                  icon: const Icon(Icons.copy_outlined),
                 ),
                 onTap: () {
-                  onClickPassword(context, passwordModel);
+                  onClickPassword(passwordModel: passwordModel);
                 },
                 title: Text(
-                  passwordVisible
-                      ? passwordModel.document.password
-                      : passwordModel.document.name,
-                ),
-                trailing: IconButton(
-                  onPressed: () {
-                    setState(() {
-                      _controller.copiedPasswordId = passwordModel.id;
-                      Clipboard.setData(
-                        ClipboardData(text: passwordModel.document.password),
-                      );
-                    });
-                  },
-                  icon: copiedPassword
-                      ? const Icon(Icons.check)
-                      : const Icon(Icons.copy_outlined),
+                  passwordModel.document.name,
                 ),
               ),
             ),
@@ -133,24 +103,18 @@ class _HomePageState extends State<HomePage> {
     return Row(
       children: [
         Flexible(
-          child: Container(
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.all(
-                Radius.circular(50),
+          child: TextField(
+            decoration: InputDecoration(
+              prefixIcon: const Icon(Icons.search_outlined),
+              hintText: 'search'.i18n(),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(20),
               ),
             ),
-            child: TextField(
-              decoration: InputDecoration(
-                prefixIcon: const Icon(Icons.search_outlined),
-                hintText: 'search'.i18n(),
-                border: InputBorder.none,
-              ),
-              onChanged: (String value) {
-                _controller.searchFilter = value;
-                _controller.applyFilter();
-              },
-            ),
+            onChanged: (String value) {
+              controller.searchFilter = value;
+              controller.applyFilter();
+            },
           ),
         ),
         IconButton(
@@ -163,95 +127,22 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Future<void> onClickNewPassword(BuildContext context) async {
-    var response = await showDialog<DocumentFirestoreModel<PasswordModel>?>(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          titlePadding: const EdgeInsets.only(
-            top: 8,
-            left: 8,
-          ),
-          title: Row(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              IconButton(
-                onPressed: context.pop,
-                icon: const Icon(Icons.arrow_back),
-              ),
-              Text('new_password'.i18n()),
-            ],
-          ),
-          content: PasswordPage(
-            DocumentFirestoreModel(
-              document: PasswordModel(
-                name: '',
-                password: '',
-                createdAt: DateTime.now().toUtc(),
-              ),
-              id: '',
-            ),
-          ),
-        );
-      },
-    );
-    if (response != null) {
-      var list = List<DocumentFirestoreModel<PasswordModel>>.from(
-        _controller.passwordListNotifier.value,
-      );
-      list.insert(0, response);
-      _controller.passwordListNotifier.value = list;
-      _controller.applyFilter();
-    }
+  Future<void> onClickPassword({
+    DocumentFirestoreModel<PasswordModel>? passwordModel,
+  }) async {
+    await context.pushNamed('/password', arguments: passwordModel);
+    controller.getAllPassword();
   }
 
-  Future<void> onClickPassword(
-    BuildContext context,
+  void onClickCopyPassword(
     DocumentFirestoreModel<PasswordModel> passwordModel,
-  ) async {
-    var response = await showDialog<DocumentFirestoreModel<PasswordModel>?>(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          titlePadding: const EdgeInsets.only(
-            top: 8,
-            left: 8,
-          ),
-          title: Row(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              IconButton(
-                onPressed: context.pop,
-                icon: const Icon(Icons.arrow_back),
-              ),
-              Text('change_password'.i18n()),
-            ],
-          ),
-          content: PasswordPage(passwordModel),
-        );
-      },
+  ) {
+    Clipboard.setData(
+      ClipboardData(text: passwordModel.document.password),
     );
-    if (response == null) {
-      return;
-    }
-    if (response.updated) {
-      var list = List<DocumentFirestoreModel<PasswordModel>>.from(
-        _controller.passwordListNotifier.value,
-      );
-      var index = list.indexOf(response);
-      var item = list.elementAt(index);
-      item.document.name = response.document.name;
-      item.document.password = response.document.password;
-      _controller.passwordListNotifier.value = list;
-    } else {
-      var list = List<DocumentFirestoreModel<PasswordModel>>.from(
-        _controller.passwordListNotifier.value,
-      );
-      list.remove(response);
-      _controller.passwordListNotifier.value = list;
-    }
-    _controller.applyFilter();
+    var snackBar = SnackBar(
+      content: Text('successfully_copied'.i18n()),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }

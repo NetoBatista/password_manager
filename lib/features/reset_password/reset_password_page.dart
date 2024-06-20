@@ -4,7 +4,12 @@ import 'package:password_manager/features/reset_password/reset_password_controll
 import 'package:password_manager/validator/form_validator.dart';
 
 class ResetPasswordPage extends StatefulWidget {
-  const ResetPasswordPage({super.key});
+  final ResetPasswordController controller;
+
+  const ResetPasswordPage({
+    required this.controller,
+    super.key,
+  });
 
   @override
   State<ResetPasswordPage> createState() => _ResetPasswordPageState();
@@ -12,7 +17,8 @@ class ResetPasswordPage extends StatefulWidget {
 
 class _ResetPasswordPageState extends State<ResetPasswordPage> {
   final _formKey = GlobalKey<FormState>();
-  final _controller = ResetPasswordController();
+
+  ResetPasswordController get controller => widget.controller;
   var _emailAddress = '';
 
   @override
@@ -22,7 +28,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
       child: Form(
         key: _formKey,
         child: ValueListenableBuilder(
-          valueListenable: _controller.isLoadingNotifier,
+          valueListenable: controller.isLoadingNotifier,
           builder: (context, valueIsLoadingNotifier, snapshot) {
             return Column(
               mainAxisSize: MainAxisSize.min,
@@ -47,7 +53,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                 OutlinedButton(
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                      _controller.submit(_emailAddress);
+                      controller.submit(_emailAddress);
                     }
                   },
                   child: Text(
@@ -62,7 +68,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                   ),
                 ),
                 ValueListenableBuilder(
-                  valueListenable: _controller.alertMessageNotifier,
+                  valueListenable: controller.alertMessageNotifier,
                   builder: (context, valueAlertMessageNotifier, snapshot) {
                     var isSuccess = valueAlertMessageNotifier ==
                         "reset_password_success".i18n();
@@ -83,13 +89,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                                   ),
                             const SizedBox(width: 8),
                             Flexible(
-                              child: Text(
-                                valueAlertMessageNotifier,
-                                textAlign: TextAlign.justify,
-                                style: TextStyle(
-                                    color:
-                                        isSuccess ? Colors.green : Colors.red),
-                              ),
+                              child: Text(valueAlertMessageNotifier),
                             ),
                           ],
                         ),

@@ -6,21 +6,25 @@ import 'package:password_manager/extension/navigation_extension.dart';
 import 'package:password_manager/features/remove_account/remove_account_controller.dart';
 
 class RemoveAccountPage extends StatefulWidget {
-  const RemoveAccountPage({super.key});
+  final RemoveAccountController controller;
+  const RemoveAccountPage({
+    required this.controller,
+    super.key,
+  });
 
   @override
   State<RemoveAccountPage> createState() => _RemoveAccountPageState();
 }
 
 class _RemoveAccountPageState extends State<RemoveAccountPage> {
-  final _controller = RemoveAccountController();
+  RemoveAccountController get controller => widget.controller;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
         child: ValueListenableBuilder(
-            valueListenable: _controller.isLoadingNotifier,
+            valueListenable: controller.isLoadingNotifier,
             builder: (context, valueIsLoadingNotifier, snapshot) {
               return Padding(
                 padding: const EdgeInsets.fromLTRB(16, 40, 16, 16),
@@ -45,7 +49,7 @@ class _RemoveAccountPageState extends State<RemoveAccountPage> {
                       onPressed: valueIsLoadingNotifier
                           ? null
                           : () {
-                              _controller.removeAccount(context);
+                              controller.removeAccount(context);
                             },
                       child: Text(
                         'remove'.i18n(),
@@ -61,7 +65,7 @@ class _RemoveAccountPageState extends State<RemoveAccountPage> {
                       ),
                     ),
                     ValueListenableBuilder(
-                      valueListenable: _controller.messageAlertNotifier,
+                      valueListenable: controller.messageAlertNotifier,
                       builder: (context, valueMessageAlertNotifier, snapshot) {
                         return Visibility(
                           visible: valueMessageAlertNotifier.isNotEmpty,

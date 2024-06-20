@@ -10,6 +10,8 @@
 .svn/
 migrate_working_dir/
 android/app/google-services.json
+pubspec.lock
+*.salive
 
 # IntelliJ related
 *.iml
