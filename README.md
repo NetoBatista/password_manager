@@ -21,6 +21,7 @@ Resources used
   * firebase_messaging    
   * cloud_firestore    
   * flutter_launcher_icons
+  * auto_injector
 
 Features
 
@@ -40,6 +41,11 @@ Features
   * Remove all data
       * Login
       * Passwords
+   
+  * Theme Mode
+      * System mode
+      * Dark mode
+      * Light mode
 
 ## Let's talk about security
 
