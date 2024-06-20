@@ -13,6 +13,7 @@ import 'package:password_manager/features/login/login_controller.dart';
 import 'package:password_manager/features/login/login_page.dart';
 import 'package:password_manager/features/new_account/new_account_controller.dart';
 import 'package:password_manager/features/new_account/new_account_page.dart';
+import 'package:password_manager/features/password/password_controller.dart';
 import 'package:password_manager/features/password/password_page.dart';
 import 'package:password_manager/features/privacy/privacy_page.dart';
 import 'package:password_manager/features/remove_account/remove_account_controller.dart';
@@ -83,6 +84,7 @@ class _AppWidgetState extends State<AppWidget> {
     var loginController = DependencyProvider.get<LoginController>();
     var homeController = DependencyProvider.get<HomeController>();
     var newAccountController = DependencyProvider.get<NewAccountController>();
+    var passwordController = DependencyProvider.get<PasswordController>();
     var removeAccountController =
         DependencyProvider.get<RemoveAccountController>();
 
@@ -100,7 +102,10 @@ class _AppWidgetState extends State<AppWidget> {
       },
       '/password': (BuildContext context) {
         var args = context.args() as DocumentFirestoreModel<PasswordModel>?;
-        return PasswordPage(passwordModel: args);
+        return PasswordPage(
+          passwordModel: args,
+          controller: passwordController,
+        );
       },
       '/settings': (BuildContext context) {
         return SettingsPage(settingsController: settingsController);

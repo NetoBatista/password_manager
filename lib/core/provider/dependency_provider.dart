@@ -10,6 +10,7 @@ import 'package:password_manager/core/service/theme_service.dart';
 import 'package:password_manager/features/home/home_controller.dart';
 import 'package:password_manager/features/login/login_controller.dart';
 import 'package:password_manager/features/new_account/new_account_controller.dart';
+import 'package:password_manager/features/password/password_controller.dart';
 import 'package:password_manager/features/remove_account/remove_account_controller.dart';
 import 'package:password_manager/features/settings/settings_controller.dart';
 
@@ -21,6 +22,7 @@ class DependencyProvider {
     _autoInjector.addSingleton<ILocalStorageService>(LocalStorageService.new);
     _autoInjector.addSingleton<IFirebaseService>(FirebaseService.new);
     _autoInjector.addSingleton<IPasswordService>(PasswordService.new);
+    _autoInjector.addSingleton(PasswordController.new);
     _autoInjector.addSingleton(SettingsController.new);
     _autoInjector.addSingleton(LoginController.new);
     _autoInjector.addSingleton(HomeController.new);

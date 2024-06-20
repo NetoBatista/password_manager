@@ -7,8 +7,10 @@ import 'package:password_manager/validator/form_validator.dart';
 
 class PasswordPage extends StatefulWidget {
   final DocumentFirestoreModel<PasswordModel>? passwordModel;
+  final PasswordController controller;
   const PasswordPage({
     this.passwordModel,
+    required this.controller,
     super.key,
   });
 
@@ -34,7 +36,7 @@ class _PasswordPageState extends State<PasswordPage> {
     super.initState();
   }
 
-  final _controller = PasswordController();
+  PasswordController get _controller => widget.controller;
   final _formKey = GlobalKey<FormState>();
 
   @override
