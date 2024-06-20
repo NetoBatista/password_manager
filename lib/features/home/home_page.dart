@@ -7,19 +7,23 @@ import 'package:password_manager/extension/navigation_extension.dart';
 import 'package:password_manager/features/home/home_controller.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final HomeController controller;
+  const HomePage({
+    required this.controller,
+    super.key,
+  });
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  final _controller = HomeController();
+  HomeController get controller => widget.controller;
 
   @override
   void initState() {
     super.initState();
-    _controller.getAllPassword();
+    controller.getAllPassword();
   }
 
   @override
@@ -30,13 +34,13 @@ class _HomePageState extends State<HomePage> {
         child: const Icon(Icons.add),
       ),
       body: ValueListenableBuilder(
-        valueListenable: _controller.isLoadingNotifier,
+        valueListenable: controller.isLoadingNotifier,
         builder: (context, snapshotIsLoadingNotifier, snapshot) {
           return ValueListenableBuilder(
-              valueListenable: _controller.passwordFilteredListNotifier,
+              valueListenable: controller.passwordFilteredListNotifier,
               builder: (context, snapshotPasswordListNotifier, snapshot) {
                 return RefreshIndicator(
-                  onRefresh: _controller.getAllPassword,
+                  onRefresh: controller.getAllPassword,
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(16, 40, 16, 16),
                     child: Column(
@@ -106,8 +110,8 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             onChanged: (String value) {
-              _controller.searchFilter = value;
-              _controller.applyFilter();
+              controller.searchFilter = value;
+              controller.applyFilter();
             },
           ),
         ),
@@ -125,7 +129,7 @@ class _HomePageState extends State<HomePage> {
     DocumentFirestoreModel<PasswordModel>? passwordModel,
   }) async {
     await context.pushNamed('/password', arguments: passwordModel);
-    _controller.getAllPassword();
+    controller.getAllPassword();
   }
 
   void onClickCopyPassword(

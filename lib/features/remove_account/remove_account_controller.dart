@@ -3,17 +3,19 @@ import 'package:localization/localization.dart';
 import 'package:password_manager/core/interface/ifirebase_service.dart';
 import 'package:password_manager/core/interface/ilocal_storage_service.dart';
 import 'package:password_manager/core/interface/ipassword_service.dart';
-import 'package:password_manager/core/service/firebase_service.dart';
-import 'package:password_manager/core/service/local_storage_service.dart';
-import 'package:password_manager/core/service/password_service.dart';
 import 'package:password_manager/extension/navigation_extension.dart';
 
 class RemoveAccountController {
   ValueNotifier<bool> isLoadingNotifier = ValueNotifier(false);
-  final IFirebaseService _firebaseService = FirebaseService();
-  final IPasswordService _passwordService = PasswordService();
-  final ILocalStorageService _localStorageService = LocalStorageService();
   ValueNotifier<String> messageAlertNotifier = ValueNotifier('');
+  final IFirebaseService _firebaseService;
+  final IPasswordService _passwordService;
+  final ILocalStorageService _localStorageService;
+  RemoveAccountController(
+    this._localStorageService,
+    this._firebaseService,
+    this._passwordService,
+  );
 
   Future<void> removeAccount(BuildContext context) async {
     try {

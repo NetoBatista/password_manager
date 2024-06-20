@@ -3,13 +3,11 @@ import 'package:password_manager/core/constant/local_storage_constant.dart';
 import 'package:password_manager/core/constant/theme_mode_constant.dart';
 import 'package:password_manager/core/interface/ilocal_storage_service.dart';
 import 'package:password_manager/core/interface/itheme_service.dart';
-import 'package:password_manager/core/service/local_storage_service.dart';
 
 class ThemeService implements IThemeService {
-  final ILocalStorageService _localStorageService = LocalStorageService();
+  final ILocalStorageService _localStorageService;
   final themeModeNotifier = ValueNotifier(ThemeMode.system);
-
-  ThemeService() {
+  ThemeService(this._localStorageService) {
     init();
   }
 

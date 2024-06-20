@@ -7,14 +7,18 @@ import 'package:password_manager/features/reset_password/reset_password_page.dar
 import 'package:password_manager/validator/form_validator.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+  final LoginController controller;
+  const LoginPage({
+    required this.controller,
+    super.key,
+  });
 
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final _controller = LoginController();
+  LoginController get controller => widget.controller;
   final _formKey = GlobalKey<FormState>();
   final _accountModel = AccountModel(
     emailAddress: '',
@@ -24,7 +28,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
-    _controller.automaticLogin(context);
+    controller.automaticLogin(context);
   }
 
   @override
@@ -33,7 +37,7 @@ class _LoginPageState extends State<LoginPage> {
       body: Center(
         child: SingleChildScrollView(
           child: ValueListenableBuilder(
-            valueListenable: _controller.isLoadingNotifier,
+            valueListenable: controller.isLoadingNotifier,
             builder: (context, snapshotIsLoading, snapshot) {
               return Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -117,7 +121,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   ValueListenableBuilder(
-                    valueListenable: _controller.messageAlertNotifier,
+                    valueListenable: controller.messageAlertNotifier,
                     builder: (context, valueMessageAlertNotifier, snapshot) {
                       return Visibility(
                         visible: valueMessageAlertNotifier.isNotEmpty,
@@ -177,7 +181,7 @@ class _LoginPageState extends State<LoginPage> {
                             onPressed: snapshotIsLoading
                                 ? null
                                 : () {
-                                    _controller.loginWithGoogle(context);
+                                    controller.loginWithGoogle(context);
                                   },
                             icon: Container(
                               decoration: BoxDecoration(
@@ -205,7 +209,7 @@ class _LoginPageState extends State<LoginPage> {
                             onPressed: snapshotIsLoading
                                 ? null
                                 : () {
-                                    _controller.loginAnonymously(context);
+                                    controller.loginAnonymously(context);
                                   },
                             icon: Container(
                               decoration: BoxDecoration(
@@ -253,7 +257,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> onClickLogin() async {
     if (_formKey.currentState!.validate()) {
-      _controller.loginUserPassword(context, _accountModel);
+      controller.loginUserPassword(context, _accountModel);
     }
   }
 

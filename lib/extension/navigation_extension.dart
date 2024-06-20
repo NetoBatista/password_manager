@@ -13,6 +13,10 @@ extension NavigationExtension on BuildContext {
     return Navigator.pushNamed(this, routeName, arguments: arguments);
   }
 
+  T? args<T>() {
+    return ModalRoute.of(this)!.settings.arguments as T?;
+  }
+
   void pop({dynamic result}) {
     return Navigator.pop(this, result);
   }

@@ -2,10 +2,9 @@ import 'package:flutter/foundation.dart';
 import 'package:password_manager/core/interface/ipassword_service.dart';
 import 'package:password_manager/core/model/document_firestore_model.dart';
 import 'package:password_manager/core/model/password_model.dart';
-import 'package:password_manager/core/service/password_service.dart';
 
 class HomeController {
-  final IPasswordService _passwordService = PasswordService();
+  final IPasswordService _passwordService;
   ValueNotifier<List<DocumentFirestoreModel<PasswordModel>>>
       passwordListNotifier = ValueNotifier([]);
 
@@ -13,6 +12,10 @@ class HomeController {
       passwordFilteredListNotifier = ValueNotifier([]);
 
   ValueNotifier<bool> isLoadingNotifier = ValueNotifier(false);
+
+  HomeController(
+    this._passwordService,
+  );
 
   String searchFilter = '';
 

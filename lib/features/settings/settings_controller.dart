@@ -5,20 +5,20 @@ import 'package:password_manager/core/constant/local_storage_constant.dart';
 import 'package:password_manager/core/interface/ifirebase_service.dart';
 import 'package:password_manager/core/interface/ilocal_storage_service.dart';
 import 'package:password_manager/core/interface/itheme_service.dart';
-import 'package:password_manager/core/service/firebase_service.dart';
-import 'package:password_manager/core/service/local_storage_service.dart';
 import 'package:password_manager/extension/navigation_extension.dart';
 
 class SettingsController {
   var changePasswordNotifier = ValueNotifier<bool>(false);
   var isLoadingNotifier = ValueNotifier<bool>(false);
   var messageAlertNotifier = ValueNotifier('');
-  final IFirebaseService _firebaseService = FirebaseService();
-  final ILocalStorageService _localStorageService = LocalStorageService();
-
+  final IFirebaseService _firebaseService;
+  final ILocalStorageService _localStorageService;
   final IThemeService _themeService;
+
   SettingsController(
     this._themeService,
+    this._firebaseService,
+    this._localStorageService,
   );
 
   User getCurrentCredential() => _firebaseService.getCurrentUser();

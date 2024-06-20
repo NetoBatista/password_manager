@@ -5,14 +5,18 @@ import 'package:password_manager/features/new_account/new_account_controller.dar
 import 'package:password_manager/validator/form_validator.dart';
 
 class NewAccountPage extends StatefulWidget {
-  const NewAccountPage({super.key});
+  final NewAccountController controller;
+  const NewAccountPage({
+    required this.controller,
+    super.key,
+  });
 
   @override
   State<NewAccountPage> createState() => _NewAccountPageState();
 }
 
 class _NewAccountPageState extends State<NewAccountPage> {
-  final _controller = NewAccountController();
+  NewAccountController get controller => widget.controller;
   final _accountModel = AccountModel(
     emailAddress: '',
     password: '',
@@ -27,7 +31,7 @@ class _NewAccountPageState extends State<NewAccountPage> {
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: ValueListenableBuilder(
-            valueListenable: _controller.isLoadingNotifier,
+            valueListenable: controller.isLoadingNotifier,
             builder: (context, valueIsLoadingNotifier, snapshot) {
               return Form(
                 key: _formKey,
@@ -73,7 +77,7 @@ class _NewAccountPageState extends State<NewAccountPage> {
                           ? null
                           : () {
                               if (_formKey.currentState!.validate()) {
-                                _controller.submit(context, _accountModel);
+                                controller.submit(context, _accountModel);
                               }
                             },
                       child: Text('confirm'.i18n()),
@@ -84,7 +88,7 @@ class _NewAccountPageState extends State<NewAccountPage> {
                       child: const LinearProgressIndicator(),
                     ),
                     ValueListenableBuilder(
-                      valueListenable: _controller.alertMessageNotifier,
+                      valueListenable: controller.alertMessageNotifier,
                       builder: (context, valueAlertMessage, snapshot) {
                         return Visibility(
                           visible: valueAlertMessage.isNotEmpty,

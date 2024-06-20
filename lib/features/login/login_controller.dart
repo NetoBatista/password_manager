@@ -6,18 +6,18 @@ import 'package:password_manager/core/constant/type_auth_constant.dart';
 import 'package:password_manager/core/interface/ifirebase_service.dart';
 import 'package:password_manager/core/interface/ilocal_storage_service.dart';
 import 'package:password_manager/core/model/account_model.dart';
-import 'package:password_manager/core/service/firebase_service.dart';
-import 'package:password_manager/core/service/local_storage_service.dart';
 import 'package:password_manager/extension/navigation_extension.dart';
 
 class LoginController {
-  final IFirebaseService _firebaseService = FirebaseService();
-
-  final ILocalStorageService _localStorageService = LocalStorageService();
-
+  final IFirebaseService _firebaseService;
+  final ILocalStorageService _localStorageService;
   final messageAlertNotifier = ValueNotifier('');
-
   final isLoadingNotifier = ValueNotifier(false);
+
+  LoginController(
+    this._firebaseService,
+    this._localStorageService,
+  );
 
   Future<void> automaticLogin(BuildContext context) async {
     try {
