@@ -18,11 +18,13 @@ import 'package:password_manager/features/password/password_page.dart';
 import 'package:password_manager/features/privacy/privacy_page.dart';
 import 'package:password_manager/features/remove_account/remove_account_controller.dart';
 import 'package:password_manager/features/remove_account/remove_account_page.dart';
+import 'package:password_manager/features/reset_password/reset_password_controller.dart';
 import 'package:password_manager/features/settings/settings_controller.dart';
 import 'package:password_manager/features/settings/settings_page.dart';
 
 class AppWidget extends StatefulWidget {
   final IThemeService themeService;
+
   const AppWidget({
     required this.themeService,
     super.key,
@@ -85,12 +87,16 @@ class _AppWidgetState extends State<AppWidget> {
     var homeController = DependencyProvider.get<HomeController>();
     var newAccountController = DependencyProvider.get<NewAccountController>();
     var passwordController = DependencyProvider.get<PasswordController>();
+    var resetController = DependencyProvider.get<ResetPasswordController>();
     var removeAccountController =
         DependencyProvider.get<RemoveAccountController>();
 
     return <String, WidgetBuilder>{
       '/': (BuildContext context) {
-        return LoginPage(controller: loginController);
+        return LoginPage(
+          controller: loginController,
+          resetController: resetController,
+        );
       },
       '/home': (BuildContext context) {
         return HomePage(controller: homeController);

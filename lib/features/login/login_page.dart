@@ -3,13 +3,17 @@ import 'package:localization/localization.dart';
 import 'package:password_manager/core/model/account_model.dart';
 import 'package:password_manager/extension/navigation_extension.dart';
 import 'package:password_manager/features/login/login_controller.dart';
+import 'package:password_manager/features/reset_password/reset_password_controller.dart';
 import 'package:password_manager/features/reset_password/reset_password_page.dart';
 import 'package:password_manager/validator/form_validator.dart';
 
 class LoginPage extends StatefulWidget {
   final LoginController controller;
+  final ResetPasswordController resetController;
+
   const LoginPage({
     required this.controller,
+    required this.resetController,
     super.key,
   });
 
@@ -282,7 +286,9 @@ class _LoginPageState extends State<LoginPage> {
               Text('forgot_password'.i18n()),
             ],
           ),
-          content: const ResetPasswordPage(),
+          content: ResetPasswordPage(
+            controller: widget.resetController,
+          ),
         );
       },
     );

@@ -12,6 +12,7 @@ import 'package:password_manager/features/login/login_controller.dart';
 import 'package:password_manager/features/new_account/new_account_controller.dart';
 import 'package:password_manager/features/password/password_controller.dart';
 import 'package:password_manager/features/remove_account/remove_account_controller.dart';
+import 'package:password_manager/features/reset_password/reset_password_controller.dart';
 import 'package:password_manager/features/settings/settings_controller.dart';
 
 class DependencyProvider {
@@ -28,6 +29,7 @@ class DependencyProvider {
     _autoInjector.addSingleton(HomeController.new);
     _autoInjector.addSingleton(NewAccountController.new);
     _autoInjector.addSingleton(RemoveAccountController.new);
+    _autoInjector.addSingleton(ResetPasswordController.new);
     _autoInjector.commit();
   }
 
