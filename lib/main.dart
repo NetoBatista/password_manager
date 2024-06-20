@@ -8,6 +8,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   DependencyProvider.injectDependency();
+
   runApp(
     AppWidget(
       themeService: DependencyProvider.get<IThemeService>(),

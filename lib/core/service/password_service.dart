@@ -3,7 +3,6 @@ import 'package:password_manager/core/interface/ifirebase_service.dart';
 import 'package:password_manager/core/interface/ipassword_service.dart';
 import 'package:password_manager/core/model/document_firestore_model.dart';
 import 'package:password_manager/core/model/password_model.dart';
-import 'package:password_manager/core/service/firebase_service.dart';
 
 class PasswordService implements IPasswordService {
   final IFirebaseService _firebaseService;

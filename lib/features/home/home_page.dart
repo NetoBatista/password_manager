@@ -23,7 +23,9 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    controller.getAllPassword();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      controller.getAllPassword();
+    });
   }
 
   @override

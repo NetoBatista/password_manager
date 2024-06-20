@@ -28,7 +28,9 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
-    controller.automaticLogin(context);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      controller.automaticLogin(context);
+    });
   }
 
   @override
