@@ -22,6 +22,7 @@ Resources used
   * cloud_firestore    
   * flutter_launcher_icons
   * auto_injector
+  * flutter_icons
 
 Features
 
