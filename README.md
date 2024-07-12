@@ -1,4 +1,4 @@
-## Password manager
+## Password Manager
 
 This application is open source feel free to create pull requests, to rate the code, report bugs or suggest new features.
 
