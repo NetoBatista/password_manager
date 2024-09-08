@@ -115,14 +115,11 @@ class _LoginPageState extends State<LoginPage> {
                     ],
                   ),
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(36, 8, 36, 8),
+                    padding: const EdgeInsets.fromLTRB(36, 0, 36, 8),
                     child: FilledButton(
                       onPressed: snapshotIsLoading ? null : onClickLogin,
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Text(
-                          "sign_in".i18n().toUpperCase(),
-                        ),
+                      child: Text(
+                        "sign_in".i18n().toUpperCase(),
                       ),
                     ),
                   ),
@@ -157,7 +154,8 @@ class _LoginPageState extends State<LoginPage> {
                     visible: snapshotIsLoading,
                     child: const Padding(
                       padding: EdgeInsets.only(
-                        left: 32.0,
+                        top: 8,
+                        left: 32,
                         right: 32,
                       ),
                       child: LinearProgressIndicator(),

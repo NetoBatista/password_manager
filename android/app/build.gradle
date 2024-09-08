@@ -37,9 +37,9 @@ android {
     defaultConfig {
         applicationId "br.com.jbsn.password_manager"
         minSdkVersion 24
-        targetSdkVersion flutter.targetSdkVersion
-        versionCode 7
-        versionName '1.1.0'
+        targetSdkVersion 34
+        versionCode 8
+        versionName '1.2.0'
         multiDexEnabled = true
     }
 

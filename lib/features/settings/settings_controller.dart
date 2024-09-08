@@ -55,9 +55,11 @@ class SettingsController {
         currentUser.email!,
         oldPassword,
       );
-      if (response.user != null) {
-        await _firebaseService.updatePassword(newPassword);
+      if (response.user == null) {
+        messageAlertNotifier.value = 'error_default'.i18n();
+        return;
       }
+      await _firebaseService.updatePassword(newPassword);
       await _localStorageService.setString(
         LocalStorageConstant.password,
         newPassword,

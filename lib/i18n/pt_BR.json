@@ -43,5 +43,11 @@
   "light_mode": "Tema claro",
   "system_mode": "Automático (sistema)",
   "continue": "Continuar",
-  "invalid_credential": "Email ou senha incorretos"
+  "invalid_credential": "Email ou senha incorretos",
+  "password_type": {
+    "none": "",
+    "weak": "Fraca",
+    "normal": "Normal",
+    "strong": "Forte"
+  }
 }

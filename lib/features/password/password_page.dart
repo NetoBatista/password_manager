@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:localization/localization.dart';
+import 'package:password_manager/core/enum/password_strength_enum.dart';
 import 'package:password_manager/core/model/document_firestore_model.dart';
 import 'package:password_manager/core/model/password_model.dart';
+import 'package:password_manager/features/password/component/password_security_component.dart';
 import 'package:password_manager/features/password/password_controller.dart';
 import 'package:password_manager/validator/form_validator.dart';
 
@@ -34,6 +36,13 @@ class _PasswordPageState extends State<PasswordPage> {
       passwordModel = widget.passwordModel!;
     }
     super.initState();
+    _controller.validateSecurityPassword(passwordModel.document.password);
+  }
+
+  @override
+  void dispose() {
+    _controller.passwordStrengthNotifier.value = PasswordStrengthEnum.none;
+    super.dispose();
   }
 
   PasswordController get _controller => widget.controller;
@@ -66,6 +75,7 @@ class _PasswordPageState extends State<PasswordPage> {
                     validator: FormValidator.requiredField,
                     decoration: InputDecoration(
                       labelText: 'name'.i18n(),
+                      counterText: '',
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10.0),
                       ),
@@ -85,10 +95,12 @@ class _PasswordPageState extends State<PasswordPage> {
                         validator: FormValidator.requiredField,
                         onChanged: (String value) {
                           passwordModel.document.password = value;
+                          _controller.validateSecurityPassword(value);
                         },
                         maxLength: 100,
                         decoration: InputDecoration(
                           labelText: 'password'.i18n(),
+                          counterText: '',
                           suffixIcon: IconButton(
                             onPressed: () {
                               _controller.showPasswordNotifier.value =
@@ -105,7 +117,9 @@ class _PasswordPageState extends State<PasswordPage> {
                       );
                     },
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 8),
+                  PasswordSecurityComponent(controller: _controller),
+                  const SizedBox(height: 8),
                   FilledButton(
                     onPressed: valueIsLoadingNotifier ? null : onClickSubmit,
                     child: Text('confirm'.i18n()),
@@ -113,15 +127,11 @@ class _PasswordPageState extends State<PasswordPage> {
                   const SizedBox(height: 8),
                   Visibility(
                     visible: passwordModel.id.isNotEmpty,
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 16),
-                      child: OutlinedButton(
-                        onPressed:
-                            valueIsLoadingNotifier ? null : onClickRemove,
-                        child: Text(
-                          'remove'.i18n(),
-                          style: const TextStyle(color: Colors.red),
-                        ),
+                    child: OutlinedButton(
+                      onPressed: valueIsLoadingNotifier ? null : onClickRemove,
+                      child: Text(
+                        'remove'.i18n(),
+                        style: const TextStyle(color: Colors.red),
                       ),
                     ),
                   ),
