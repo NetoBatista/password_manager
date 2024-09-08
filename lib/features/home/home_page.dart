@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:localization/localization.dart';
+import 'package:password_manager/core/enum/password_strength_enum.dart';
 import 'package:password_manager/core/model/document_firestore_model.dart';
 import 'package:password_manager/core/model/password_model.dart';
+import 'package:password_manager/core/util/password_util.dart';
 import 'package:password_manager/extension/navigation_extension.dart';
 import 'package:password_manager/features/home/home_controller.dart';
 
@@ -35,34 +37,36 @@ class _HomePageState extends State<HomePage> {
         onPressed: onClickPassword,
         child: const Icon(Icons.add),
       ),
-      body: ValueListenableBuilder(
-        valueListenable: controller.isLoadingNotifier,
-        builder: (context, snapshotIsLoadingNotifier, snapshot) {
-          return ValueListenableBuilder(
-              valueListenable: controller.passwordFilteredListNotifier,
-              builder: (context, snapshotPasswordListNotifier, snapshot) {
-                return RefreshIndicator(
-                  onRefresh: controller.getAllPassword,
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 40, 16, 16),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        buildHeader(context),
-                        const SizedBox(height: 16),
-                        Visibility(
-                          visible: snapshotIsLoadingNotifier,
-                          child: const LinearProgressIndicator(),
-                        ),
-                        const SizedBox(height: 8),
-                        buildPasswordItems(snapshotPasswordListNotifier),
-                      ],
+      body: SafeArea(
+        child: ValueListenableBuilder(
+          valueListenable: controller.isLoadingNotifier,
+          builder: (context, snapshotIsLoadingNotifier, snapshot) {
+            return ValueListenableBuilder(
+                valueListenable: controller.passwordFilteredListNotifier,
+                builder: (context, snapshotPasswordListNotifier, snapshot) {
+                  return RefreshIndicator(
+                    onRefresh: controller.getAllPassword,
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          buildHeader(context),
+                          const SizedBox(height: 16),
+                          Visibility(
+                            visible: snapshotIsLoadingNotifier,
+                            child: const LinearProgressIndicator(),
+                          ),
+                          const SizedBox(height: 8),
+                          buildPasswordItems(snapshotPasswordListNotifier),
+                        ],
+                      ),
                     ),
-                  ),
-                );
-              });
-        },
+                  );
+                });
+          },
+        ),
       ),
     );
   }
@@ -77,6 +81,15 @@ class _HomePageState extends State<HomePage> {
         itemBuilder: (BuildContext context, int index) {
           var lastItem = index == valuePasswordListNotifier.length - 1;
           var passwordModel = valuePasswordListNotifier.elementAt(index);
+          var passwordStrength = PasswordUtil.validatePasswordStrength(
+            passwordModel.document.password,
+          );
+          var color = Colors.red;
+          if (passwordStrength == PasswordStrengthEnum.normal) {
+            color = Colors.amber;
+          } else if (passwordStrength == PasswordStrengthEnum.strong) {
+            color = Colors.green;
+          }
           return Padding(
             padding: EdgeInsets.only(bottom: !lastItem ? 0 : 100),
             child: Card(
@@ -90,6 +103,13 @@ class _HomePageState extends State<HomePage> {
                 },
                 title: Text(
                   passwordModel.document.name,
+                ),
+                trailing: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    PasswordUtil.translate(passwordStrength),
+                    style: TextStyle(color: color),
+                  ),
                 ),
               ),
             ),
