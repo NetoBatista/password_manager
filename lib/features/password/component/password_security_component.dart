@@ -32,21 +32,21 @@ class _PasswordSecurityComponentState extends State<PasswordSecurityComponent> {
   }
 
   Color getColor(
-    PasswordStrengthEnum passwordStrengthEnum,
     PasswordStrengthEnum currentProgress,
+    PasswordStrengthEnum passwordStrengthEnum,
   ) {
-    var score = getScore(passwordStrengthEnum);
+    var score = getScore(currentProgress);
     if (score == 1) {
-      if (currentProgress == PasswordStrengthEnum.weak) {
+      if (passwordStrengthEnum == PasswordStrengthEnum.weak) {
         return Colors.red;
       }
     }
     if (score == 2) {
-      if (currentProgress == PasswordStrengthEnum.weak) {
-        return Colors.amber;
+      if (passwordStrengthEnum == PasswordStrengthEnum.weak) {
+        return Colors.blue;
       }
-      if (currentProgress == PasswordStrengthEnum.normal) {
-        return Colors.amber;
+      if (passwordStrengthEnum == PasswordStrengthEnum.normal) {
+        return Colors.blue;
       }
     }
     if (score == 3) {
@@ -85,7 +85,13 @@ class _PasswordSecurityComponentState extends State<PasswordSecurityComponent> {
                 ),
               ),
               const SizedBox(width: 8),
-              Text(PasswordUtil.translate(snapshot))
+              Text(
+                PasswordUtil.translate(snapshot),
+                style: TextStyle(
+                  color: getColor(snapshot, snapshot),
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ],
           );
         },

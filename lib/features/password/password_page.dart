@@ -42,6 +42,7 @@ class _PasswordPageState extends State<PasswordPage> {
   @override
   void dispose() {
     _controller.passwordStrengthNotifier.value = PasswordStrengthEnum.none;
+    _controller.showPasswordNotifier.value = false;
     super.dispose();
   }
 

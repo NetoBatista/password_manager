@@ -38,8 +38,8 @@ android {
         applicationId "br.com.jbsn.password_manager"
         minSdkVersion 24
         targetSdkVersion 34
-        versionCode 8
-        versionName '1.2.0'
+        versionCode 9
+        versionName '1.3.0'
         multiDexEnabled = true
     }
 

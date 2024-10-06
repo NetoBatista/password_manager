@@ -86,7 +86,7 @@ class _HomePageState extends State<HomePage> {
           );
           var color = Colors.red;
           if (passwordStrength == PasswordStrengthEnum.normal) {
-            color = Colors.amber;
+            color = Colors.blue;
           } else if (passwordStrength == PasswordStrengthEnum.strong) {
             color = Colors.green;
           }
@@ -108,7 +108,10 @@ class _HomePageState extends State<HomePage> {
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
                     PasswordUtil.translate(passwordStrength),
-                    style: TextStyle(color: color),
+                    style: TextStyle(
+                      color: color,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
