@@ -2,22 +2,28 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:localization/localization.dart';
 import 'package:password_manager/core/interface/itheme_service.dart';
+import 'package:password_manager/core/provider/dependency_provider.dart';
 import 'package:password_manager/main_dependency.dart';
 
-class AppWidget extends StatefulWidget {
-  final IThemeService themeService;
-
-  const AppWidget({
-    required this.themeService,
+class MainWidget extends StatefulWidget {
+  const MainWidget({
     super.key,
   });
 
   @override
-  State<AppWidget> createState() => _AppWidgetState();
+  State<MainWidget> createState() => _MainWidgetState();
 }
 
-class _AppWidgetState extends State<AppWidget> {
-  IThemeService get _themeService => widget.themeService;
+class _MainWidgetState extends State<MainWidget> {
+  final IThemeService _themeService = DependencyProvider.get();
+  Map<String, Widget Function(BuildContext)> routes = {};
+
+  @override
+  void initState() {
+    routes = MainDependency.mapRoutes();
+    super.initState();
+    _themeService.init();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +63,7 @@ class _AppWidgetState extends State<AppWidget> {
             }
             return const Locale("en", "US");
           },
-          routes: MainDependency.mapRoutes,
+          routes: routes,
         );
       },
     );

@@ -15,17 +15,12 @@ class SettingsItemComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextButton(
-      onPressed: onTap,
-      child: Row(
-        children: [
-          leading,
-          const SizedBox(width: 16),
-          Text(title),
-          const Spacer(),
-          trailing,
-        ],
-      ),
+    return ListTile(
+      onTap: onTap,
+      enabled: onTap != null,
+      leading: leading,
+      title: Text(title),
+      trailing: trailing,
     );
   }
 }

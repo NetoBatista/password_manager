@@ -1,8 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:localization/localization.dart';
 import 'package:password_manager/core/util/url_util.dart';
+import 'package:password_manager/extension/translate_extension.dart';
+import 'package:password_manager/shared/component/body_default_component.dart';
 
 class KnowMorePage extends StatefulWidget {
   const KnowMorePage({super.key});
@@ -16,30 +17,27 @@ class _KnowMorePageState extends State<KnowMorePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('know_more'.i18n()),
+        title: Text('know_more'.translate()),
       ),
       body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                textKnowMore(),
+        child: BodyDefaultComponent(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              textKnowMore(),
+            ),
+            InkWell(
+              onTap: () => UrlUtil.openLink(
+                'https://github.com/NetoBatista/password_manager',
               ),
-              InkWell(
-                onTap: () => UrlUtil.openLink(
-                  'https://github.com/NetoBatista/password_manager',
+              child: Center(
+                child: Image.asset(
+                  'lib/assets/github.png',
+                  height: 72,
                 ),
-                child: Center(
-                  child: Image.asset(
-                    'lib/assets/github.png',
-                    height: 72,
-                  ),
-                ),
-              )
-            ],
-          ),
+              ),
+            )
+          ],
         ),
       ),
     );

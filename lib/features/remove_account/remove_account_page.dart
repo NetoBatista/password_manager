@@ -1,97 +1,63 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:localization/localization.dart';
-import 'package:password_manager/extension/navigation_extension.dart';
+import 'package:password_manager/extension/context_extension.dart';
 import 'package:password_manager/features/remove_account/remove_account_controller.dart';
+import 'package:password_manager/extension/translate_extension.dart';
+import 'package:password_manager/shared/component/body_default_component.dart';
+import 'package:password_manager/shared/component/error_component.dart';
 
 class RemoveAccountPage extends StatefulWidget {
-  final RemoveAccountController controller;
-  const RemoveAccountPage({
-    required this.controller,
-    super.key,
-  });
+  const RemoveAccountPage({super.key});
 
   @override
   State<RemoveAccountPage> createState() => _RemoveAccountPageState();
 }
 
 class _RemoveAccountPageState extends State<RemoveAccountPage> {
-  RemoveAccountController get controller => widget.controller;
+  late RemoveAccountController controller;
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      controller.init();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    controller = context.watchContext();
+    var isLoading = controller.value.isLoading;
+    var error = controller.value.error;
+
     return Scaffold(
-      body: SingleChildScrollView(
-        child: ValueListenableBuilder(
-            valueListenable: controller.isLoadingNotifier,
-            builder: (context, valueIsLoadingNotifier, snapshot) {
-              return Padding(
-                padding: const EdgeInsets.fromLTRB(16, 40, 16, 16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Row(
-                      children: [
-                        IconButton(
-                          onPressed: context.pop,
-                          icon: const Icon(
-                            Icons.arrow_back,
-                          ),
-                        ),
-                        Text('remove_account'.i18n())
-                      ],
-                    ),
-                    const SizedBox(height: 24),
-                    Text(textRemoveAccount()),
-                    const SizedBox(height: 16),
-                    OutlinedButton(
-                      onPressed: valueIsLoadingNotifier
-                          ? null
-                          : () {
-                              controller.removeAccount(context);
-                            },
-                      child: Text(
-                        'remove'.i18n(),
-                        style: TextStyle(
-                            color: valueIsLoadingNotifier ? null : Colors.red),
-                      ),
-                    ),
-                    Visibility(
-                      visible: valueIsLoadingNotifier,
-                      child: const Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: LinearProgressIndicator(),
-                      ),
-                    ),
-                    ValueListenableBuilder(
-                      valueListenable: controller.messageAlertNotifier,
-                      builder: (context, valueMessageAlertNotifier, snapshot) {
-                        return Visibility(
-                          visible: valueMessageAlertNotifier.isNotEmpty,
-                          child: Padding(
-                            padding: const EdgeInsets.only(top: 16.0),
-                            child: Row(
-                              children: [
-                                const Icon(
-                                  Icons.info_outline,
-                                  color: Colors.red,
-                                ),
-                                const SizedBox(width: 8),
-                                Text(
-                                  valueMessageAlertNotifier,
-                                  style: const TextStyle(color: Colors.red),
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    )
-                  ],
-                ),
-              );
-            }),
+      appBar: AppBar(
+        title: Text('remove_account'.translate()),
+      ),
+      body: BodyDefaultComponent(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(textRemoveAccount()),
+          OutlinedButton(
+            onPressed: isLoading
+                ? null
+                : () {
+                    controller.removeAccount(context);
+                  },
+            child: Text(
+              'remove'.translate(),
+              style: TextStyle(color: isLoading ? null : Colors.red),
+            ),
+          ),
+          Visibility(
+            visible: isLoading,
+            child: const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: LinearProgressIndicator(),
+            ),
+          ),
+          ErrorComponent(error: error),
+        ],
       ),
     );
   }

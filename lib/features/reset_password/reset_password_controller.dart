@@ -1,25 +1,33 @@
 import 'package:flutter/material.dart';
-import 'package:localization/localization.dart';
 import 'package:password_manager/core/interface/ifirebase_service.dart';
+import 'package:password_manager/core/provider/dependency_provider.dart';
+import 'package:password_manager/extension/translate_extension.dart';
+import 'package:password_manager/shared/default_state_shared.dart';
 
-class ResetPasswordController {
-  final IFirebaseService _firebaseService;
-  var isLoadingNotifier = ValueNotifier<bool>(false);
-  var alertMessageNotifier = ValueNotifier<String>('');
+class ResetPasswordController extends ValueNotifier<IDefaultStateShared> {
+  ResetPasswordController() : super(DefaultStateShared());
 
-  ResetPasswordController(
-    this._firebaseService,
-  );
+  final IFirebaseService _firebaseService = DependencyProvider.get();
+
+  void init() {
+    value.error = '';
+    value.isLoading = false;
+    notifyListeners();
+  }
 
   Future<void> submit(String email) async {
     try {
-      isLoadingNotifier.value = true;
+      value.error = '';
+      value.isLoading = true;
+      notifyListeners();
+
       await _firebaseService.sendPasswordResetEmail(email);
-      alertMessageNotifier.value = 'reset_password_success'.i18n();
+      value.error = 'reset_password_success'.translate();
     } catch (error) {
-      alertMessageNotifier.value = 'error_default'.i18n();
+      value.error = 'error_default'.translate();
     } finally {
-      isLoadingNotifier.value = false;
+      value.isLoading = false;
+      notifyListeners();
     }
   }
 }

@@ -1,7 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:localization/localization.dart';
+import 'package:password_manager/extension/translate_extension.dart';
+import 'package:password_manager/shared/component/body_default_component.dart';
 
 class PrivacyPage extends StatefulWidget {
   const PrivacyPage({super.key});
@@ -15,18 +16,13 @@ class _PrivacyPageState extends State<PrivacyPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('privacy'.i18n()),
+        title: Text('privacy'.translate()),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(textKnowMore()),
-            ],
-          ),
-        ),
+      body: BodyDefaultComponent(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(textKnowMore()),
+        ],
       ),
     );
   }

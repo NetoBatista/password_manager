@@ -1,5 +1,5 @@
-import 'package:localization/localization.dart';
 import 'package:password_manager/core/enum/password_strength_enum.dart';
+import 'package:password_manager/extension/translate_extension.dart';
 
 class PasswordUtil {
   static PasswordStrengthEnum validatePasswordStrength(String password) {
@@ -38,14 +38,14 @@ class PasswordUtil {
 
   static String translate(PasswordStrengthEnum passwordStrengthEnum) {
     if (passwordStrengthEnum == PasswordStrengthEnum.weak) {
-      return "password_type.weak".i18n();
+      return "password_type.weak".translate();
     }
     if (passwordStrengthEnum == PasswordStrengthEnum.normal) {
-      return "password_type.normal".i18n();
+      return "password_type.normal".translate();
     }
     if (passwordStrengthEnum == PasswordStrengthEnum.strong) {
-      return "password_type.strong".i18n();
+      return "password_type.strong".translate();
     }
-    return "password_type.none".i18n();
+    return "password_type.none".translate();
   }
 }

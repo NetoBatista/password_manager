@@ -5,7 +5,7 @@ extension NavigationExtension on BuildContext {
     return Navigator.pushNamedAndRemoveUntil(
       this,
       routeName,
-      (Route route) => route.isFirst,
+      (Route route) => false,
     );
   }
 

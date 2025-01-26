@@ -1,16 +1,14 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:password_manager/core/constant/local_storage_constant.dart';
-import 'package:password_manager/core/constant/type_auth_constant.dart';
 import 'package:password_manager/core/interface/ifirebase_service.dart';
 import 'package:password_manager/core/interface/ilocal_storage_service.dart';
-import 'package:password_manager/core/model/account_model.dart';
 import 'package:password_manager/core/provider/dependency_provider.dart';
-import 'package:password_manager/extension/navigation_extension.dart';
 import 'package:password_manager/extension/translate_extension.dart';
 import 'package:password_manager/shared/default_state_shared.dart';
 
-class NewAccountController extends ValueNotifier<IDefaultStateShared> {
-  NewAccountController() : super(DefaultStateShared());
+class UpdatePasswordController extends ValueNotifier<IDefaultStateShared> {
+  UpdatePasswordController() : super(DefaultStateShared());
 
   final IFirebaseService _firebaseService = DependencyProvider.get();
   final ILocalStorageService _localStorageService = DependencyProvider.get();
@@ -21,41 +19,32 @@ class NewAccountController extends ValueNotifier<IDefaultStateShared> {
     notifyListeners();
   }
 
-  Future<void> submit(BuildContext context, AccountModel accountModel) async {
+  User getCurrentCredential() => _firebaseService.getCurrentUser();
+
+  Future<void> changePassword(String oldPassword, String newPassword) async {
     try {
       value.error = '';
       value.isLoading = true;
       notifyListeners();
 
-      var credential = await _firebaseService.createUserWithEmailAndPassword(
-        accountModel.emailAddress,
-        accountModel.password,
+      var currentUser = getCurrentCredential();
+      var response = await _firebaseService.signInWithEmailAndPassword(
+        currentUser.email!,
+        oldPassword,
       );
-
-      if (credential.user == null) {
+      if (response.user == null) {
+        value.error = 'error_default'.translate();
         return;
       }
-
-      await _localStorageService.setString(
-        LocalStorageConstant.email,
-        accountModel.emailAddress,
-      );
-
-      await _localStorageService.setString(
-        LocalStorageConstant.typeAuth,
-        TypeAuthConstant.emailPassword,
-      );
-
+      await _firebaseService.updatePassword(newPassword);
       await _localStorageService.setString(
         LocalStorageConstant.password,
-        accountModel.password,
+        newPassword,
       );
-
-      if (!context.mounted) {
-        return;
-      }
-
-      context.pushNamedAndRemoveUntil('/home');
+      value.error = "password_changed_successfully".translate();
+    } on FirebaseAuthException catch (error) {
+      var code = error.code.replaceAll('-', '_');
+      value.error = code.toLowerCase().translate();
     } catch (error) {
       value.error = 'error_default'.translate();
     } finally {

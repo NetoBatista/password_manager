@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:localization/localization.dart';
 import 'package:password_manager/core/model/account_model.dart';
+import 'package:password_manager/extension/context_extension.dart';
 import 'package:password_manager/features/new_account/new_account_controller.dart';
+import 'package:password_manager/shared/component/body_default_component.dart';
+import 'package:password_manager/shared/component/error_component.dart';
 import 'package:password_manager/validator/form_validator.dart';
+import 'package:password_manager/extension/translate_extension.dart';
 
 class NewAccountPage extends StatefulWidget {
-  final NewAccountController controller;
   const NewAccountPage({
-    required this.controller,
     super.key,
   });
 
@@ -16,7 +17,7 @@ class NewAccountPage extends StatefulWidget {
 }
 
 class _NewAccountPageState extends State<NewAccountPage> {
-  NewAccountController get controller => widget.controller;
+  late NewAccountController controller;
   final _accountModel = AccountModel(
     emailAddress: '',
     password: '',
@@ -24,98 +25,76 @@ class _NewAccountPageState extends State<NewAccountPage> {
   final _formKey = GlobalKey<FormState>();
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      controller.init();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    controller = context.watchContext();
+    var isLoading = controller.value.isLoading;
+    var error = controller.value.error;
+
     return Scaffold(
-      appBar: AppBar(title: Text('register_now'.i18n())),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: ValueListenableBuilder(
-            valueListenable: controller.isLoadingNotifier,
-            builder: (context, valueIsLoadingNotifier, snapshot) {
-              return Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    TextFormField(
-                      enabled: !valueIsLoadingNotifier,
-                      initialValue: _accountModel.emailAddress,
-                      maxLength: 100,
-                      validator: FormValidator.requiredField,
-                      decoration: InputDecoration(
-                        labelText: 'email_address'.i18n(),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                      ),
-                      onChanged: (String? value) {
-                        _accountModel.emailAddress = value ?? '';
-                      },
-                    ),
-                    const SizedBox(height: 16),
-                    TextFormField(
-                      enabled: !valueIsLoadingNotifier,
-                      initialValue: _accountModel.password,
-                      obscureText: true,
-                      maxLength: 100,
-                      validator: FormValidator.requiredPassword,
-                      decoration: InputDecoration(
-                        labelText: 'password'.i18n(),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                      ),
-                      onChanged: (String? value) {
-                        _accountModel.password = value ?? '';
-                      },
-                    ),
-                    const SizedBox(height: 16),
-                    OutlinedButton(
-                      onPressed: valueIsLoadingNotifier
-                          ? null
-                          : () {
-                              if (_formKey.currentState!.validate()) {
-                                controller.submit(context, _accountModel);
-                              }
-                            },
-                      child: Text('confirm'.i18n()),
-                    ),
-                    const SizedBox(height: 16),
-                    Visibility(
-                      visible: valueIsLoadingNotifier,
-                      child: const LinearProgressIndicator(),
-                    ),
-                    ValueListenableBuilder(
-                      valueListenable: controller.alertMessageNotifier,
-                      builder: (context, valueAlertMessage, snapshot) {
-                        return Visibility(
-                          visible: valueAlertMessage.isNotEmpty,
-                          child: Row(
-                            children: [
-                              const Icon(
-                                Icons.info_outline,
-                                color: Colors.red,
-                              ),
-                              const SizedBox(width: 8),
-                              Flexible(
-                                child: Text(
-                                  valueAlertMessage,
-                                  textAlign: TextAlign.justify,
-                                  style: const TextStyle(color: Colors.red),
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    )
-                  ],
+      appBar: AppBar(title: Text('register'.translate())),
+      body: Form(
+        key: _formKey,
+        child: BodyDefaultComponent(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextFormField(
+              enabled: !isLoading,
+              initialValue: _accountModel.emailAddress,
+              maxLength: 100,
+              validator: FormValidator.requiredField,
+              decoration: InputDecoration(
+                prefixIcon: const Icon(Icons.email_outlined),
+                labelText: 'email_address'.translate(),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.0),
                 ),
-              );
-            },
-          ),
+              ),
+              onChanged: (String? value) {
+                _accountModel.emailAddress = value ?? '';
+              },
+            ),
+            TextFormField(
+              enabled: !isLoading,
+              initialValue: _accountModel.password,
+              obscureText: true,
+              maxLength: 100,
+              validator: FormValidator.requiredPassword,
+              decoration: InputDecoration(
+                prefixIcon: const Icon(Icons.password_outlined),
+                labelText: 'password'.translate(),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+              ),
+              onChanged: (String? value) {
+                _accountModel.password = value ?? '';
+              },
+            ),
+            FilledButton(
+              onPressed: isLoading
+                  ? null
+                  : () {
+                      if (_formKey.currentState!.validate()) {
+                        controller.submit(context, _accountModel);
+                      }
+                    },
+              child: Text('confirm'.translate()),
+            ),
+            Visibility(
+              visible: isLoading,
+              child: const LinearProgressIndicator(),
+            ),
+            ErrorComponent(error: error),
+          ],
         ),
       ),
     );

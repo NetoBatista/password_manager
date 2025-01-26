@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:localization/localization.dart';
+import 'package:password_manager/extension/context_extension.dart';
 import 'package:password_manager/features/reset_password/reset_password_controller.dart';
+import 'package:password_manager/shared/component/error_component.dart';
 import 'package:password_manager/validator/form_validator.dart';
+import 'package:password_manager/extension/translate_extension.dart';
 
 class ResetPasswordPage extends StatefulWidget {
-  final ResetPasswordController controller;
-
   const ResetPasswordPage({
-    required this.controller,
     super.key,
   });
 
@@ -17,89 +16,66 @@ class ResetPasswordPage extends StatefulWidget {
 
 class _ResetPasswordPageState extends State<ResetPasswordPage> {
   final _formKey = GlobalKey<FormState>();
-
-  ResetPasswordController get controller => widget.controller;
+  late ResetPasswordController controller;
   var _emailAddress = '';
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      controller.init();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    controller = context.watchContext();
+    var isLoading = controller.value.isLoading;
+    var error = controller.value.error;
+
     return SizedBox(
       width: MediaQuery.of(context).size.width,
       child: Form(
         key: _formKey,
-        child: ValueListenableBuilder(
-          valueListenable: controller.isLoadingNotifier,
-          builder: (context, valueIsLoadingNotifier, snapshot) {
-            return Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                TextFormField(
-                  enabled: !valueIsLoadingNotifier,
-                  initialValue: _emailAddress,
-                  maxLength: 100,
-                  validator: FormValidator.requiredField,
-                  decoration: InputDecoration(
-                    labelText: 'email_address'.i18n(),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                  ),
-                  onChanged: (String? value) {
-                    _emailAddress = value ?? '';
-                  },
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          spacing: 8,
+          children: [
+            TextFormField(
+              enabled: !isLoading,
+              initialValue: _emailAddress,
+              maxLength: 100,
+              validator: FormValidator.requiredField,
+              decoration: InputDecoration(
+                labelText: 'email_address'.translate(),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.0),
                 ),
-                const SizedBox(height: 16),
-                OutlinedButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      controller.submit(_emailAddress);
-                    }
-                  },
-                  child: Text(
-                    'confirm'.i18n(),
-                  ),
-                ),
-                Visibility(
-                  visible: valueIsLoadingNotifier,
-                  child: const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: LinearProgressIndicator(),
-                  ),
-                ),
-                ValueListenableBuilder(
-                  valueListenable: controller.alertMessageNotifier,
-                  builder: (context, valueAlertMessageNotifier, snapshot) {
-                    var isSuccess = valueAlertMessageNotifier ==
-                        "reset_password_success".i18n();
-                    return Visibility(
-                      visible: valueAlertMessageNotifier.isNotEmpty,
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 8.0),
-                        child: Row(
-                          children: [
-                            isSuccess
-                                ? const Icon(
-                                    Icons.check,
-                                    color: Colors.green,
-                                  )
-                                : const Icon(
-                                    Icons.info_outline,
-                                    color: Colors.red,
-                                  ),
-                            const SizedBox(width: 8),
-                            Flexible(
-                              child: Text(valueAlertMessageNotifier),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                )
-              ],
-            );
-          },
+              ),
+              onChanged: (String? value) {
+                _emailAddress = value ?? '';
+              },
+            ),
+            OutlinedButton(
+              onPressed: () {
+                if (_formKey.currentState!.validate()) {
+                  controller.submit(_emailAddress);
+                }
+              },
+              child: Text(
+                'confirm'.translate(),
+              ),
+            ),
+            Visibility(
+              visible: isLoading,
+              child: const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: LinearProgressIndicator(),
+              ),
+            ),
+            ErrorComponent(error: error),
+          ],
         ),
       ),
     );

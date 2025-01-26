@@ -1,25 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:localization/localization.dart';
 import 'package:password_manager/core/interface/ifirebase_service.dart';
 import 'package:password_manager/core/interface/ilocal_storage_service.dart';
 import 'package:password_manager/core/interface/ipassword_service.dart';
+import 'package:password_manager/core/provider/dependency_provider.dart';
 import 'package:password_manager/extension/navigation_extension.dart';
+import 'package:password_manager/extension/translate_extension.dart';
+import 'package:password_manager/shared/default_state_shared.dart';
 
-class RemoveAccountController {
-  ValueNotifier<bool> isLoadingNotifier = ValueNotifier(false);
-  ValueNotifier<String> messageAlertNotifier = ValueNotifier('');
-  final IFirebaseService _firebaseService;
-  final IPasswordService _passwordService;
-  final ILocalStorageService _localStorageService;
-  RemoveAccountController(
-    this._localStorageService,
-    this._firebaseService,
-    this._passwordService,
-  );
+class RemoveAccountController extends ValueNotifier<IDefaultStateShared> {
+  RemoveAccountController() : super(DefaultStateShared());
+
+  final IFirebaseService _firebaseService = DependencyProvider.get();
+  final IPasswordService _passwordService = DependencyProvider.get();
+  final ILocalStorageService _localStorageService = DependencyProvider.get();
+
+  void init() {
+    value.error = '';
+    value.isLoading = false;
+    notifyListeners();
+  }
 
   Future<void> removeAccount(BuildContext context) async {
     try {
-      isLoadingNotifier.value = true;
+      value.error = '';
+      value.isLoading = true;
+      notifyListeners();
+
       await _passwordService.removeAll();
       await _firebaseService.deleteAccount();
       if (!context.mounted) {
@@ -28,9 +34,10 @@ class RemoveAccountController {
       _localStorageService.clear();
       context.pushNamedAndRemoveUntil('/');
     } catch (error) {
-      messageAlertNotifier.value = 'error_default'.i18n();
+      value.error = 'error_default'.translate();
     } finally {
-      isLoadingNotifier.value = false;
+      value.isLoading = false;
+      notifyListeners();
     }
   }
 }

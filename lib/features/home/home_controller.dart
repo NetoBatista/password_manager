@@ -2,44 +2,47 @@ import 'package:flutter/foundation.dart';
 import 'package:password_manager/core/interface/ipassword_service.dart';
 import 'package:password_manager/core/model/document_firestore_model.dart';
 import 'package:password_manager/core/model/password_model.dart';
+import 'package:password_manager/core/provider/dependency_provider.dart';
+import 'package:password_manager/shared/default_state_shared.dart';
 
-class HomeController {
-  final IPasswordService _passwordService;
-  ValueNotifier<List<DocumentFirestoreModel<PasswordModel>>>
-      passwordListNotifier = ValueNotifier([]);
+class HomeController extends ValueNotifier<IDefaultStateShared> {
+  HomeController() : super(DefaultStateShared());
 
-  ValueNotifier<List<DocumentFirestoreModel<PasswordModel>>>
-      passwordFilteredListNotifier = ValueNotifier([]);
+  final IPasswordService _passwordService = DependencyProvider.get();
+  List<DocumentFirestoreModel<PasswordModel>> _passwordList = [];
 
-  ValueNotifier<bool> isLoadingNotifier = ValueNotifier(false);
-
-  HomeController(
-    this._passwordService,
-  );
-
-  String searchFilter = '';
+  String _searchFilter = '';
 
   Future<void> getAllPassword() async {
     try {
-      isLoadingNotifier.value = true;
-      passwordListNotifier.value = await _passwordService.getAll();
-      applyFilter();
+      value.isLoading = true;
+      notifyListeners();
+      _passwordList = await _passwordService.getAll();
     } catch (_) {
-      passwordListNotifier.value = [];
+      _passwordList = [];
     } finally {
-      isLoadingNotifier.value = false;
+      value.isLoading = false;
+      notifyListeners();
     }
   }
 
-  void applyFilter() {
-    var list = passwordListNotifier.value
-        .where((element) =>
-            searchFilter.isEmpty ||
-            element.document.name
-                .toUpperCase()
-                .contains(searchFilter.toUpperCase()))
-        .toList();
+  void setFilter(String value) {
+    _searchFilter = value;
+    notifyListeners();
+  }
+
+  List<DocumentFirestoreModel<PasswordModel>> getPasswordList() {
+    var list = _passwordList.where((
+      DocumentFirestoreModel<PasswordModel> element,
+    ) {
+      if (_searchFilter.isEmpty) {
+        return true;
+      }
+      return element.document.name
+          .toUpperCase()
+          .contains(_searchFilter.toUpperCase());
+    }).toList();
     list.sort((a, b) => b.document.createdAt.compareTo(a.document.createdAt));
-    passwordFilteredListNotifier.value = list;
+    return list;
   }
 }

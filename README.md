@@ -10,19 +10,19 @@ All data transmitted is encrypted, this project uses firebase to search and save
   
 Remember to regularly change your passwords, both the application login and your saved passwords, to maintain your security even better.
 
-Resources used
+External packages used
 
-  * google_sign_in    
-  * localization    
-  * shared_preferences    
-  * url_launcher    
-  * firebase_auth
-  * firebase_core    
-  * firebase_messaging    
-  * cloud_firestore    
-  * flutter_launcher_icons
   * auto_injector
-  * flutter_icons
+  * cloud_firestore
+  * firebase_auth
+  * firebase_core
+  * google_sign_in
+  * localization
+  * shared_preferences
+  * url_launcher
+  * provider
+  * shimmer
+  * flutter_launcher_icons
 
 Features
 

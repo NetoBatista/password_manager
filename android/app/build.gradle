@@ -21,26 +21,28 @@ if (keystorePropertiesFile.exists()) {
 
 android {
     namespace = "br.com.jbsn.password_manager"
-    compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    compileSdkVersion flutter.compileSdkVersion
+    ndkVersion flutter.ndkVersion
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8
+    }
+
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
     }
 
     defaultConfig {
         applicationId "br.com.jbsn.password_manager"
         minSdkVersion 24
         targetSdkVersion 34
-        versionCode 9
-        versionName '1.3.0'
-        multiDexEnabled = true
+        versionCode 10
+        versionName '1.4.0'
     }
 
     signingConfigs {
@@ -66,5 +68,4 @@ flutter {
 dependencies {
     implementation platform('com.google.firebase:firebase-bom:33.1.0')
     implementation 'com.google.firebase:firebase-analytics'
-    implementation("androidx.multidex:multidex:2.0.1")
 }

@@ -7,37 +7,34 @@ import 'package:password_manager/core/service/firebase_service.dart';
 import 'package:password_manager/core/service/local_storage_service.dart';
 import 'package:password_manager/core/service/password_service.dart';
 import 'package:password_manager/core/service/theme_service.dart';
-import 'package:password_manager/features/home/home_controller.dart';
-import 'package:password_manager/features/login/login_controller.dart';
-import 'package:password_manager/features/new_account/new_account_controller.dart';
-import 'package:password_manager/features/password/password_controller.dart';
-import 'package:password_manager/features/remove_account/remove_account_controller.dart';
-import 'package:password_manager/features/reset_password/reset_password_controller.dart';
-import 'package:password_manager/features/settings/settings_controller.dart';
 
 class DependencyProvider {
   static final _autoInjector = AutoInjector();
+  static final _autoInjectorKeys = AutoInjector();
 
   static void injectDependency() {
-    _autoInjector.addSingleton<IThemeService>(ThemeService.new);
-    _autoInjector.addSingleton<ILocalStorageService>(LocalStorageService.new);
-    _autoInjector.addSingleton<IFirebaseService>(FirebaseService.new);
-    _autoInjector.addSingleton<IPasswordService>(PasswordService.new);
-    _autoInjector.addSingleton(PasswordController.new);
-    _autoInjector.addSingleton(SettingsController.new);
-    _autoInjector.addSingleton(LoginController.new);
-    _autoInjector.addSingleton(HomeController.new);
-    _autoInjector.addSingleton(NewAccountController.new);
-    _autoInjector.addSingleton(RemoveAccountController.new);
-    _autoInjector.addSingleton(ResetPasswordController.new);
+    _inject<IFirebaseService>(FirebaseService.new);
+    _inject<IPasswordService>(PasswordService.new);
+    _inject<ILocalStorageService>(LocalStorageService.new);
+    _inject<IThemeService>(ThemeService.new);
     _autoInjector.commit();
+    _autoInjectorKeys.commit();
   }
 
-  static T get<T extends Object>() {
+  static void _inject<T>(Function func) {
+    _autoInjector.addSingleton<T>(func);
+    _autoInjectorKeys.addSingleton<T>(func, key: T.toString());
+  }
+
+  static T get<T extends Object>({String? key}) {
+    if (key != null) {
+      return _autoInjectorKeys.get<T>(key: key);
+    }
     return _autoInjector.get<T>();
   }
 
   static void dispose() {
-    return _autoInjector.dispose();
+    _autoInjector.dispose();
+    _autoInjectorKeys.dispose();
   }
 }

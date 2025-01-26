@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:password_manager/core/model/document_firestore_model.dart';
 import 'package:password_manager/core/model/password_model.dart';
-import 'package:password_manager/core/provider/dependency_provider.dart';
 import 'package:password_manager/extension/navigation_extension.dart';
 import 'package:password_manager/features/home/home_controller.dart';
 import 'package:password_manager/features/home/home_page.dart';
@@ -18,42 +17,71 @@ import 'package:password_manager/features/remove_account/remove_account_page.dar
 import 'package:password_manager/features/reset_password/reset_password_controller.dart';
 import 'package:password_manager/features/settings/settings_controller.dart';
 import 'package:password_manager/features/settings/settings_page.dart';
+import 'package:password_manager/features/theme/theme_controller.dart';
+import 'package:password_manager/features/theme/theme_page.dart';
+import 'package:password_manager/features/update_password/update_password_controller.dart';
+import 'package:password_manager/features/update_password/update_password_page.dart';
+import 'package:provider/provider.dart';
 
 class MainDependency {
-  static Map<String, WidgetBuilder> get mapRoutes {
-    var settingsController = DependencyProvider.get<SettingsController>();
-    var loginController = DependencyProvider.get<LoginController>();
-    var homeController = DependencyProvider.get<HomeController>();
-    var newAccountController = DependencyProvider.get<NewAccountController>();
-    var passwordController = DependencyProvider.get<PasswordController>();
-    var resetController = DependencyProvider.get<ResetPasswordController>();
-    var removeAccountController =
-        DependencyProvider.get<RemoveAccountController>();
+  static List<ChangeNotifierProvider> providers() {
+    var loginController = ChangeNotifierProvider(
+      create: (_) => LoginController(),
+    );
+    var homeController = ChangeNotifierProvider(
+      create: (_) => HomeController(),
+    );
+    var newAccountController = ChangeNotifierProvider(
+      create: (_) => NewAccountController(),
+    );
+    var passwordController = ChangeNotifierProvider(
+      create: (_) => PasswordController(),
+    );
+    var settingsController = ChangeNotifierProvider(
+      create: (_) => SettingsController(),
+    );
+    var removeAccountController = ChangeNotifierProvider(
+      create: (_) => RemoveAccountController(),
+    );
+    var resetPasswordController = ChangeNotifierProvider(
+      create: (_) => ResetPasswordController(),
+    );
+    var themeController = ChangeNotifierProvider(
+      create: (_) => ThemeController(),
+    );
+    var updatePasswordController = ChangeNotifierProvider(
+      create: (_) => UpdatePasswordController(),
+    );
+    return [
+      loginController,
+      homeController,
+      newAccountController,
+      passwordController,
+      settingsController,
+      removeAccountController,
+      resetPasswordController,
+      themeController,
+      updatePasswordController,
+    ];
+  }
 
+  static Map<String, WidgetBuilder> mapRoutes() {
     return <String, WidgetBuilder>{
       '/': (BuildContext context) {
-        return LoginPage(
-          controller: loginController,
-          resetController: resetController,
-        );
+        return const LoginPage();
       },
       '/home': (BuildContext context) {
-        return HomePage(controller: homeController);
+        return const HomePage();
       },
       '/new_account': (BuildContext context) {
-        return NewAccountPage(
-          controller: newAccountController,
-        );
+        return const NewAccountPage();
       },
       '/password': (BuildContext context) {
         var args = context.args() as DocumentFirestoreModel<PasswordModel>?;
-        return PasswordPage(
-          passwordModel: args,
-          controller: passwordController,
-        );
+        return PasswordPage(passwordModel: args);
       },
       '/settings': (BuildContext context) {
-        return SettingsPage(settingsController: settingsController);
+        return const SettingsPage();
       },
       '/know_more': (BuildContext context) {
         return const KnowMorePage();
@@ -62,7 +90,13 @@ class MainDependency {
         return const PrivacyPage();
       },
       '/remove_account': (BuildContext context) {
-        return RemoveAccountPage(controller: removeAccountController);
+        return const RemoveAccountPage();
+      },
+      '/theme': (BuildContext context) {
+        return const ThemePage();
+      },
+      '/change_password': (BuildContext context) {
+        return const UpdatePasswordPage();
       },
     };
   }

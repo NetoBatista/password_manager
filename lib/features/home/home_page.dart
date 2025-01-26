@@ -1,17 +1,21 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:localization/localization.dart';
 import 'package:password_manager/core/enum/password_strength_enum.dart';
 import 'package:password_manager/core/model/document_firestore_model.dart';
 import 'package:password_manager/core/model/password_model.dart';
 import 'package:password_manager/core/util/password_util.dart';
+import 'package:password_manager/extension/context_extension.dart';
 import 'package:password_manager/extension/navigation_extension.dart';
+import 'package:password_manager/extension/translate_extension.dart';
 import 'package:password_manager/features/home/home_controller.dart';
+import 'package:password_manager/shared/component/body_default_component.dart';
+import 'package:password_manager/shared/component/error_component.dart';
+import 'package:password_manager/shared/component/progress_indicator_appbar_component.dart';
+import 'package:password_manager/shared/component/skeleton_loader_component.dart';
 
 class HomePage extends StatefulWidget {
-  final HomeController controller;
   const HomePage({
-    required this.controller,
     super.key,
   });
 
@@ -20,7 +24,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  HomeController get controller => widget.controller;
+  late HomeController controller;
 
   @override
   void initState() {
@@ -28,126 +32,6 @@ class _HomePageState extends State<HomePage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       controller.getAllPassword();
     });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: onClickPassword,
-        child: const Icon(Icons.add),
-      ),
-      body: SafeArea(
-        child: ValueListenableBuilder(
-          valueListenable: controller.isLoadingNotifier,
-          builder: (context, snapshotIsLoadingNotifier, snapshot) {
-            return ValueListenableBuilder(
-                valueListenable: controller.passwordFilteredListNotifier,
-                builder: (context, snapshotPasswordListNotifier, snapshot) {
-                  return RefreshIndicator(
-                    onRefresh: controller.getAllPassword,
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          buildHeader(context),
-                          const SizedBox(height: 16),
-                          Visibility(
-                            visible: snapshotIsLoadingNotifier,
-                            child: const LinearProgressIndicator(),
-                          ),
-                          const SizedBox(height: 8),
-                          buildPasswordItems(snapshotPasswordListNotifier),
-                        ],
-                      ),
-                    ),
-                  );
-                });
-          },
-        ),
-      ),
-    );
-  }
-
-  Flexible buildPasswordItems(
-    List<DocumentFirestoreModel<PasswordModel>> valuePasswordListNotifier,
-  ) {
-    return Flexible(
-      child: ListView.builder(
-        shrinkWrap: true,
-        itemCount: valuePasswordListNotifier.length,
-        itemBuilder: (BuildContext context, int index) {
-          var lastItem = index == valuePasswordListNotifier.length - 1;
-          var passwordModel = valuePasswordListNotifier.elementAt(index);
-          var passwordStrength = PasswordUtil.validatePasswordStrength(
-            passwordModel.document.password,
-          );
-          var color = Colors.red;
-          if (passwordStrength == PasswordStrengthEnum.normal) {
-            color = Colors.blue;
-          } else if (passwordStrength == PasswordStrengthEnum.strong) {
-            color = Colors.green;
-          }
-          return Padding(
-            padding: EdgeInsets.only(bottom: !lastItem ? 0 : 100),
-            child: Card(
-              child: ListTile(
-                leading: IconButton(
-                  onPressed: () => onClickCopyPassword(passwordModel),
-                  icon: const Icon(Icons.copy_outlined),
-                ),
-                onTap: () {
-                  onClickPassword(passwordModel: passwordModel);
-                },
-                title: Text(
-                  passwordModel.document.name,
-                ),
-                trailing: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    PasswordUtil.translate(passwordStrength),
-                    style: TextStyle(
-                      color: color,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  Row buildHeader(BuildContext context) {
-    return Row(
-      children: [
-        Flexible(
-          child: TextField(
-            decoration: InputDecoration(
-              prefixIcon: const Icon(Icons.search_outlined),
-              hintText: 'search'.i18n(),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(20),
-              ),
-            ),
-            onChanged: (String value) {
-              controller.searchFilter = value;
-              controller.applyFilter();
-            },
-          ),
-        ),
-        IconButton(
-          onPressed: () => context.pushNamed('/settings'),
-          icon: const Icon(
-            Icons.settings_outlined,
-          ),
-        )
-      ],
-    );
   }
 
   Future<void> onClickPassword({
@@ -164,8 +48,111 @@ class _HomePageState extends State<HomePage> {
       ClipboardData(text: passwordModel.document.password),
     );
     var snackBar = SnackBar(
-      content: Text('successfully_copied'.i18n()),
+      content: Text('successfully_copied'.translate()),
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    controller = context.watchContext();
+    var isLoading = controller.value.isLoading;
+    var error = controller.value.error;
+    var passwordList = controller.getPasswordList();
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('password_manager'.translate()),
+        actions: [
+          ProgressIndicatorAppbarComponent(isVisible: isLoading),
+          IconButton(
+            onPressed: () => context.pushNamed('/settings'),
+            icon: const Icon(
+              Icons.settings_outlined,
+            ),
+          )
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: onClickPassword,
+        child: const Icon(Icons.add),
+      ),
+      body: BodyDefaultComponent(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          TextField(
+            decoration: InputDecoration(
+              prefixIcon: const Icon(Icons.search_outlined),
+              hintText: 'search'.translate(),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+            ),
+            onChanged: controller.setFilter,
+          ),
+          ErrorComponent(error: error),
+          Visibility(
+            visible: isLoading,
+            child: ListView.separated(
+              shrinkWrap: true,
+              itemCount: 10,
+              separatorBuilder: (BuildContext context, int index) {
+                return const SizedBox(height: 8);
+              },
+              itemBuilder: (BuildContext context, int index) {
+                return Card(
+                  child: SkeletonLoaderComponent(
+                    height: 60,
+                    width: MediaQuery.of(context).size.width,
+                  ),
+                );
+              },
+            ),
+          ),
+          ListView.builder(
+            shrinkWrap: true,
+            itemCount: passwordList.length,
+            itemBuilder: (BuildContext context, int index) {
+              var passwordModel = passwordList.elementAt(index);
+              var passwordStrength = PasswordUtil.validatePasswordStrength(
+                passwordModel.document.password,
+              );
+              var color = Colors.red;
+              if (passwordStrength == PasswordStrengthEnum.normal) {
+                color = Colors.blue;
+              } else if (passwordStrength == PasswordStrengthEnum.strong) {
+                color = Colors.green;
+              }
+              return Card(
+                child: ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  leading: IconButton(
+                    onPressed: () => onClickCopyPassword(passwordModel),
+                    icon: const Icon(Icons.copy_outlined),
+                  ),
+                  onTap: () {
+                    onClickPassword(passwordModel: passwordModel);
+                  },
+                  title: Text(
+                    passwordModel.document.name,
+                  ),
+                  trailing: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      PasswordUtil.translate(passwordStrength),
+                      style: TextStyle(
+                        color: color,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+        ],
+      ),
+    );
   }
 }

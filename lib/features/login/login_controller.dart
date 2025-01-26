@@ -1,28 +1,27 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:localization/localization.dart';
 import 'package:password_manager/core/constant/local_storage_constant.dart';
 import 'package:password_manager/core/constant/type_auth_constant.dart';
 import 'package:password_manager/core/interface/ifirebase_service.dart';
 import 'package:password_manager/core/interface/ilocal_storage_service.dart';
 import 'package:password_manager/core/model/account_model.dart';
+import 'package:password_manager/core/provider/dependency_provider.dart';
 import 'package:password_manager/extension/navigation_extension.dart';
+import 'package:password_manager/extension/translate_extension.dart';
+import 'package:password_manager/shared/default_state_shared.dart';
 
-class LoginController {
-  final IFirebaseService _firebaseService;
-  final ILocalStorageService _localStorageService;
-  final messageAlertNotifier = ValueNotifier('');
-  final isLoadingNotifier = ValueNotifier(false);
+class LoginController extends ValueNotifier<IDefaultStateShared> {
+  LoginController() : super(DefaultStateShared());
 
-  LoginController(
-    this._firebaseService,
-    this._localStorageService,
-  );
+  final IFirebaseService _firebaseService = DependencyProvider.get();
+  final ILocalStorageService _localStorageService = DependencyProvider.get();
 
   Future<void> automaticLogin(BuildContext context) async {
     try {
-      messageAlertNotifier.value = '';
-      isLoadingNotifier.value = true;
+      value.error = '';
+      value.isLoading = true;
+      notifyListeners();
+
       var email = await _localStorageService.getString(
         LocalStorageConstant.email,
       );
@@ -65,9 +64,10 @@ class LoginController {
 
       context.pushNamedAndRemoveUntil('/home');
     } catch (_) {
-      messageAlertNotifier.value = "error_default".i18n();
+      value.error = "error_default".translate();
     } finally {
-      isLoadingNotifier.value = false;
+      value.isLoading = false;
+      notifyListeners();
     }
   }
 
@@ -76,8 +76,9 @@ class LoginController {
     AccountModel accountModel,
   ) async {
     try {
-      messageAlertNotifier.value = '';
-      isLoadingNotifier.value = true;
+      value.error = '';
+      value.isLoading = true;
+      notifyListeners();
 
       var credential = await _firebaseService.signInWithEmailAndPassword(
         accountModel.emailAddress,
@@ -110,18 +111,20 @@ class LoginController {
       context.pushNamedAndRemoveUntil('/home');
     } on FirebaseAuthException catch (error) {
       var code = error.code.replaceAll('-', '_');
-      messageAlertNotifier.value = code.toLowerCase().i18n();
+      value.error = code.toLowerCase().translate();
     } catch (error) {
-      messageAlertNotifier.value = "error_default".i18n();
+      value.error = "error_default".translate();
     } finally {
-      isLoadingNotifier.value = false;
+      value.isLoading = false;
+      notifyListeners();
     }
   }
 
   Future<void> loginWithGoogle(BuildContext context) async {
     try {
-      messageAlertNotifier.value = '';
-      isLoadingNotifier.value = true;
+      value.error = '';
+      value.isLoading = true;
+      notifyListeners();
 
       await _firebaseService.signOut();
 
@@ -152,16 +155,19 @@ class LoginController {
 
       context.pushNamedAndRemoveUntil('/home');
     } catch (error) {
-      messageAlertNotifier.value = "error_default".i18n();
+      value.error = "error_default".translate();
     } finally {
-      isLoadingNotifier.value = false;
+      value.isLoading = false;
+      notifyListeners();
     }
   }
 
   Future<void> loginAnonymously(BuildContext context) async {
     try {
-      messageAlertNotifier.value = '';
-      isLoadingNotifier.value = true;
+      value.error = '';
+      value.isLoading = true;
+      notifyListeners();
+
       var credential = await _firebaseService.signInAnonymously();
 
       if (credential.user == null) {
@@ -178,9 +184,10 @@ class LoginController {
       }
       context.pushNamedAndRemoveUntil('/home');
     } catch (error) {
-      messageAlertNotifier.value = "error_default".i18n();
+      value.error = "error_default".translate();
     } finally {
-      isLoadingNotifier.value = false;
+      value.isLoading = false;
+      notifyListeners();
     }
   }
 }

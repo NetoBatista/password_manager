@@ -57,45 +57,38 @@ class _PasswordSecurityComponentState extends State<PasswordSecurityComponent> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: ValueListenableBuilder<PasswordStrengthEnum>(
-        valueListenable: controller.passwordStrengthNotifier,
-        builder: (context, snapshot, _) {
-          return Row(
-            children: [
-              Expanded(
-                child: LinearProgressIndicator(
-                  value: 1,
-                  color: getColor(snapshot, PasswordStrengthEnum.weak),
-                ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: LinearProgressIndicator(
-                  value: 1,
-                  color: getColor(snapshot, PasswordStrengthEnum.normal),
-                ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: LinearProgressIndicator(
-                  value: 1,
-                  color: getColor(snapshot, PasswordStrengthEnum.strong),
-                ),
-              ),
-              const SizedBox(width: 8),
-              Text(
-                PasswordUtil.translate(snapshot),
-                style: TextStyle(
-                  color: getColor(snapshot, snapshot),
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          );
-        },
-      ),
+    var snapshot = controller.passwordStrength;
+    return Row(
+      children: [
+        Expanded(
+          child: LinearProgressIndicator(
+            value: 1,
+            color: getColor(snapshot, PasswordStrengthEnum.weak),
+          ),
+        ),
+        const SizedBox(width: 8),
+        Expanded(
+          child: LinearProgressIndicator(
+            value: 1,
+            color: getColor(snapshot, PasswordStrengthEnum.normal),
+          ),
+        ),
+        const SizedBox(width: 8),
+        Expanded(
+          child: LinearProgressIndicator(
+            value: 1,
+            color: getColor(snapshot, PasswordStrengthEnum.strong),
+          ),
+        ),
+        const SizedBox(width: 8),
+        Text(
+          PasswordUtil.translate(snapshot),
+          style: TextStyle(
+            color: getColor(snapshot, snapshot),
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ],
     );
   }
 }

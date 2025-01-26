@@ -3,10 +3,11 @@ import 'package:password_manager/core/interface/ifirebase_service.dart';
 import 'package:password_manager/core/interface/ipassword_service.dart';
 import 'package:password_manager/core/model/document_firestore_model.dart';
 import 'package:password_manager/core/model/password_model.dart';
+import 'package:password_manager/core/provider/dependency_provider.dart';
 
 class PasswordService implements IPasswordService {
-  final IFirebaseService _firebaseService;
-  PasswordService(this._firebaseService);
+  PasswordService();
+  final IFirebaseService _firebaseService = DependencyProvider.get();
 
   CollectionReference<Map<String, dynamic>> get _collectionReference {
     var currentUser = _firebaseService.getCurrentUser();
