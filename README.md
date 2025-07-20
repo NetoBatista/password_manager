@@ -66,13 +66,8 @@ To try the app you can download it:
 * [Google Play](https://play.google.com/store/apps/details?id=br.com.jbsn.password_manager)
 
 ## App images:
-<img src="https://github.com/NetoBatista/password_manager/assets/23426240/64fcf814-ad9a-40a8-a70d-e34159e5ec2e" width="200" />
-<img src="https://github.com/NetoBatista/password_manager/assets/23426240/9dd9b42a-b574-4c84-a034-14ac96059ccb" width="200" />
-
-
-<img src="https://github.com/NetoBatista/password_manager/assets/23426240/58988733-8c84-433d-9100-fffecaa13266" width="200" />
-<img src="https://github.com/NetoBatista/password_manager/assets/23426240/864f5107-bf8a-4766-9a9d-b0aba185a7aa" width="200" />
-
-<img src="https://github.com/NetoBatista/password_manager/assets/23426240/d9dc2055-eeb5-4bef-90b0-a51375094b29" width="200" />
-<img src="https://github.com/NetoBatista/password_manager/assets/23426240/e4a492e4-82b7-465c-8d10-f674e716cc95" width="200" />
+<img width="200" src="https://github.com/user-attachments/assets/16ab09aa-83fb-484a-8232-07b765b666bb" />
+<img width="200" src="https://github.com/user-attachments/assets/177b19d9-28ae-49b2-ac61-16502d193689" />
+<img width="200" src="https://github.com/user-attachments/assets/2024e759-de49-4bb6-a5df-f17ea61a2591" />
+<img width="200" src="https://github.com/user-attachments/assets/7051d9a7-ebdc-46fe-bc0e-fb1362246477" />
 
