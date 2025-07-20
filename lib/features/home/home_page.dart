@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:password_manager/core/enum/password_strength_enum.dart';
@@ -118,33 +117,60 @@ class _HomePageState extends State<HomePage> {
               var passwordStrength = PasswordUtil.validatePasswordStrength(
                 passwordModel.document.password,
               );
-              var color = Colors.red;
+              Color color = Colors.red.shade700;
               if (passwordStrength == PasswordStrengthEnum.normal) {
-                color = Colors.blue;
+                color = Colors.blue.shade700;
               } else if (passwordStrength == PasswordStrengthEnum.strong) {
-                color = Colors.green;
+                color = Colors.green.shade700;
               }
+
               return Card(
-                child: ListTile(
-                  contentPadding: EdgeInsets.zero,
-                  leading: IconButton(
-                    onPressed: () => onClickCopyPassword(passwordModel),
-                    icon: const Icon(Icons.copy_outlined),
-                  ),
-                  onTap: () {
-                    onClickPassword(passwordModel: passwordModel);
-                  },
-                  title: Text(
-                    passwordModel.document.name,
-                  ),
-                  trailing: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      PasswordUtil.translate(passwordStrength),
-                      style: TextStyle(
-                        color: color,
-                        fontWeight: FontWeight.bold,
-                      ),
+                shadowColor: Colors.grey,
+                child: InkWell(
+                  onTap: () => onClickPassword(passwordModel: passwordModel),
+                  child: Container(
+                    padding: const EdgeInsets.all(8),
+                    width: MediaQuery.of(context).size.width,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      spacing: 4,
+                      children: [
+                        Text(
+                          passwordModel.document.name,
+                          style: const TextStyle(
+                            fontSize: 16,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        Row(
+                          children: [
+                            Text(
+                              'level'.translate(),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const Text(
+                              ': ',
+                            ),
+                            Text(
+                              PasswordUtil.translate(passwordStrength),
+                              style: TextStyle(
+                                color: color,
+                              ),
+                            ),
+                            const Spacer(),
+                            TextButton.icon(
+                              onPressed: () =>
+                                  onClickCopyPassword(passwordModel),
+                              icon: const Icon(Icons.copy_outlined),
+                              label: Text('copy'.translate()),
+                            ),
+                          ],
+                        )
+                      ],
                     ),
                   ),
                 ),

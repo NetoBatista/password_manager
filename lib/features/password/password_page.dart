@@ -87,6 +87,7 @@ class _PasswordPageState extends State<PasswordPage> {
                 passwordModel.document.name = value;
               },
             ),
+            const SizedBox(height: 4),
             TextFormField(
               enabled: !isLoading,
               initialValue: passwordModel.document.password,
@@ -111,6 +112,7 @@ class _PasswordPageState extends State<PasswordPage> {
                 ),
               ),
             ),
+            const SizedBox(height: 4),
             PasswordSecurityComponent(controller: _controller),
             FilledButton(
               onPressed: isLoading ? null : onClickSubmit,

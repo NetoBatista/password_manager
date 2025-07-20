@@ -45,6 +45,8 @@
   "system_mode": "Automático (sistema)",
   "continue": "Continuar",
   "invalid_credential": "Email ou senha incorretos",
+  "level": "Nível",
+  "copy": "Copiar",
   "password_type": {
     "none": "",
     "weak": "Fraca",

@@ -74,25 +74,23 @@ class _LoginPageState extends State<LoginPage> {
     var error = controller.value.error;
 
     return Scaffold(
-      body: SafeArea(
+      body: Center(
         child: BodyDefaultComponent(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const Icon(
-              Icons.lock,
-              size: 72,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(
-                top: 16,
-                left: 36,
-              ),
-              child: Text(
-                'welcome_to_password_manager'.translate(),
-                style: const TextStyle(fontSize: 16),
+            const Text(
+              'Login',
+              style: TextStyle(
+                fontSize: 32,
+                fontWeight: FontWeight.bold,
               ),
             ),
+            Text(
+              'welcome_to_password_manager'.translate(),
+              style: const TextStyle(fontSize: 16),
+            ),
+            const SizedBox(height: 4),
             Form(
               key: _formKey,
               child: Column(
@@ -130,17 +128,13 @@ class _LoginPageState extends State<LoginPage> {
                 ],
               ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(right: 32),
-                  child: TextButton(
-                    onPressed: isLoading ? null : onClickForgotPassword,
-                    child: Text('forgot_password'.translate()),
-                  ),
-                ),
-              ],
+            TextButton(
+              style: const ButtonStyle(
+                visualDensity: VisualDensity.compact,
+                alignment: Alignment.centerRight,
+              ),
+              onPressed: isLoading ? null : onClickForgotPassword,
+              child: Text('forgot_password'.translate()),
             ),
             FilledButton(
               onPressed: isLoading ? null : onClickLogin,
@@ -160,19 +154,16 @@ class _LoginPageState extends State<LoginPage> {
                 child: LinearProgressIndicator(),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 8, bottom: 8),
-              child: Row(
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  const Expanded(child: Divider()),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 8.0, right: 8),
-                    child: Text('or_continue_with'.translate()),
-                  ),
-                  const Expanded(child: Divider())
-                ],
-              ),
+            Row(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                const Expanded(child: Divider()),
+                Padding(
+                  padding: const EdgeInsets.only(left: 8.0, right: 8),
+                  child: Text('or_continue_with'.translate()),
+                ),
+                const Expanded(child: Divider())
+              ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -234,7 +225,7 @@ class _LoginPageState extends State<LoginPage> {
               ],
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 8, bottom: 32),
+              padding: const EdgeInsets.only(top: 8),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
